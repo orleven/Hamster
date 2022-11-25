@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block css %}
+<!--  <link href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}" rel="stylesheet"/>-->
+{{ super() }}
+    <link href="{{ url_for('static', filename='css/dataTables.bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/buttons.bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/cert.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="clearfix"></div>
+<!-- /page title-->
+<div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>{{title}}</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/buttons.bootstrap.min.js') }}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    })
+</script>
+{% endblock %}

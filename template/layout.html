@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% block head %}
+    <title>{% block title %}{% endblock %} - Hamster</title>
+    {% endblock %}
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="shortcut icon" type="image/png"/>
+    {% block css %}
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet"/>
+    {% endblock %}
+    <link href="{{ url_for('static', filename='css/custom.min.css') }}" rel="stylesheet"/>
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!-- right navigation -->
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <!-- menu logo -->
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="{{ url_for('index.dashboard') }}" class="site_title"><i class="fa fa-paw"></i><span> Hamster</span></a>
+                </div>
+                <div class="clearfix"></div>
+                <!-- /menu logo -->
+
+                <!-- menu profile quick info -->
+                <div class="profile clearfix">
+                    <div class="profile_pic">
+                        <img src="{{ url_for('static', filename='img/img.jpg') }}" alt=" "
+                             class="img-circle profile_img"/>
+                    </div>
+                    <div class="profile_info">
+                        <span>Welcome, </span>
+                        <h2>{{username}}</h2>
+                    </div>
+                </div>
+                <br/>
+                <!-- /menu profile quick info -->
+
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="menu_section">
+                        <ul class="nav side-menu">
+                            <li><a href="javascript:void(0)"><i class="fa fa-home"></i> Dashboard </a></li>
+                            <li><a href="{{ url_for('vul.index') }}"><i class="fa fa-cubes"></i> Vulnerability </a></li>
+                            <li>
+                                <a><i class="fa fa-cube"></i> Cache <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu" style="display: none;">
+                                    <li><a href="{{ url_for('packet.index') }}"> Packet </a></li>
+                                    <li><a href="{{ url_for('cache.index') }}"> Cache </a></li>
+                                    <li><a href="{{ url_for('dnslog.index') }}"> DNSlog </a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a><i class="fa fa-book"></i> Collect <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu" style="display: none;">
+                                    <li><a href="{{ url_for('path.index') }}"> Path </a></li>
+                                    <li><a href="{{ url_for('param.index') }}"> Param </a></li>
+                                    <li><a href="{{ url_for('email.index') }}"> Email </a></li>
+                                    <li><a href="{{ url_for('jsonp.index') }}"> Jsonp </a></li>
+                                    <li><a href="{{ url_for('cors.index') }}"> CORS </a></li>
+                                </ul>
+                            </li>
+
+                            {% if role == "Admin" %}
+                            <li>
+                                <a><i class="fa fa-cog"></i> Setting <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu" style="display: none;">
+                                    <li><a href="{{ url_for('white.index') }}"> White List</a></li>
+                                    <li><a href="{{ url_for('black.index') }}"> Black List</a></li>
+                                    <li><a href="{{ url_for('time.index') }}"> Time List</a></li>
+                                    <li><a href="{{ url_for('username.index') }}"> Username List</a></li>
+                                    <li><a href="{{ url_for('password.index') }}"> Password List</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a><i class="fa fa-laptop"></i> System <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu" style="display: none;">
+                                    <li><a href="{{ url_for('addon.index') }}"> Addon </a></li>
+                                    <li><a href="{{ url_for('engine.index') }}"> Engine </a></li>
+                                    <li><a href="{{ url_for('user.index') }}"> User </a></li>
+                                    <li><a href="{{ url_for('log.index') }}"> Log </a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+        <!-- /right navigation -->
+
+        <!-- top navigation -->
+        <div class="top_nav">
+            <div class="nav_menu">
+                <div class="nav toggle">
+                    <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                </div>
+                <nav class="nav navbar-nav">
+                    <ul class="navbar-right">
+                        <li class="nav-item dropdown open" style="padding-left: 15px;">
+                            <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true"
+                               id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                                <img src="{{ url_for('static', filename='img/img.jpg') }}" alt="">{{username}}
+                            </a>
+                            <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url_for('cert.index') }}">Cert</a>
+                                <a class="dropdown-item" href="{{ url_for('index.profile') }}">Profile</a>
+                                <a class="dropdown-item" href="{{ url_for('index.reset') }}">Reset</a>
+                                <a class="dropdown-item" href="{{ url_for('index.logout') }}"><i class="fa fa-sign-out pull-right"></i> Log
+                                    Out</a>
+                            </div>
+                        </li>
+                        <li role="presentation" class="nav-item dropdown open"></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- main content -->
+        <div class="right_col" role="main">
+            <div class="">
+                <!-- content -->
+                {% block content %} {% endblock %}
+                <!-- /content -->
+            </div>
+        </div>
+
+        <!-- footer content -->
+        <footer>
+            <div class="pull-right">
+                © 2022 <a href="https://hamster.orleven.com">hamster.orleven.com</a>. All rights reserved.
+            </div>
+            <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/popper.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}" type="text/javascript"></script>
+<!--    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>-->
+{% block js %}
+{% endblock %}
+<script src="{{ url_for('static', filename='js/custom.min.js') }}" type="text/javascript"></script>
+</body>
+</html>

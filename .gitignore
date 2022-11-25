@@ -1,0 +1,18 @@
+# project
+.idea
+.git
+.DS_Store
+
+# python project
+*.pyc
+__pycache__
+
+# hamster project
+venv/
+log/
+conf/
+dev/
+addon/
+tool/
+
+test.py

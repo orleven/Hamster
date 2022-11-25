@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block css %}
+<!--  <link href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}" rel="stylesheet"/>-->
+{{ super() }}
+<link href="{{ url_for('static', filename='css/dataTables.bootstrap.min.css') }}" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/buttons.bootstrap.min.css') }}" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/cert.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="clearfix"></div>
+<!-- /page title-->
+<div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>{{title}} Password</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-1 col-sm-1"></div>
+                    <div class="col-md-10 col-sm-10">
+                        <form id="password-form" data-parsley-validate class="form-horizontal form-label-left"
+                              method="post" action="{{ url_for('index.reset') }}">
+
+                            <label for="password">Password:</label>
+                            <input id="password" name="password" required="required"
+                                   class="form-control" placeholder="Password" type="password">
+
+                            <label for="new_password">New Password:</label>
+                            <input id="new_password" name="new_password" required="required"
+                                   class="form-control" placeholder="New Password" type="password">
+
+                            <label for="confirm_password">Confirm Password:</label>
+                            <input id="confirm_password" name="confirm_password" required="required"
+                                   class="form-control" placeholder="Confirm Password" type="password">
+                            <br/>
+                            <p>{{message}}</p>
+                            <br/>
+                            <button type="submit" id="password_button" class="btn btn-success submit_button">Sumbit</button>
+                        </form>
+                    </div>
+                    <div class="col-md-1 col-sm-1"></div>
+                </div>
+            </div>
+        </div>
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>{{title}} API-Key</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-1 col-sm-1"></div>
+                    <div class="col-md-10 col-sm-10">
+                        <form id="apikey-form" data-parsley-validate class="form-horizontal form-label-left"
+                              method="post" action="{{ url_for('index.apikey') }}">
+                            <label for="password">API Key:</label>
+                            <input type="text" id="apikey" name="apikey" required="required"
+                                   class="form-control" placeholder="apikey" disabled value="{{api_key}}">
+                            <br/>
+                            <button type="submit" id="apikey_button" class="btn btn-warning t_button">Reset</button>
+                        </form>
+                    </div>
+                    <div class="col-md-1 col-sm-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/buttons.bootstrap.min.js') }}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    })
+</script>
+{% endblock %}

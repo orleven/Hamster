@@ -1,0 +1,444 @@
+{% extends "layout.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block css %}
+<!--  <link href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}" rel="stylesheet"/>-->
+{{ super() }}
+<link href="{{ url_for('static', filename='css/dataTables.bootstrap.min.css') }}" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/buttons.bootstrap.min.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+
+<div class="clearfix"></div>
+<!-- /page title-->
+<div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>{{title}}</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="">
+                            <form class="form-label-left input_mask">
+                                <div class="col-md-4 col-sm-4 form-group has-feedback"></div>
+                                <div class="col-md-3 col-sm-3  form-group has-feedback">
+                                    <input type="text" class="form-control" id="search_keyword" placeholder="keyword">
+                                </div>
+                                <div class="col-md-4 col-sm-4  form-group has-feedback">
+                                    <input type="text" class="form-control" id="search_url" placeholder="url">
+                                </div>
+                                <div class="col-md-1 col-sm-1  form-group has-feedback">
+                                    <button id="search_button" class="btn btn-primary" type="button">Search</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card-box table-responsive">
+                        <table id="cache_datatable" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" class="checkall"/></th>
+                                <th>ID</th>
+                                <th>keyword</th>
+                                <th>Status</th>
+<!--                                <th>Method</th>-->
+                                <th>URL</th>
+<!--                                <th>Addon</th>-->
+                                <th>Update</th>
+                                <th>Operation</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <br/>
+                <button id="select_delete_button" class="btn btn-danger" type="button">Delete</button>
+                <button id="select_clear_3day_old_button" class="btn btn-danger" type="button">Clear 3Day</button>
+                <button id="select_clear_all_button" class="btn btn-danger" type="button">Clear All</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bs-tables-modal-detail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Detail</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12 col-sm-12 ">
+                    <label for="detail_url">Url:</label>
+                    <input class="form-control" name="detail_url" id="detail_url" disabled>
+                </div>
+                <div class="col-md-6 col-sm-6 ">
+                    <label for="detail_request">Request:</label>
+                    <textarea class="form-control" name="detail_request" id="detail_request" rows="15"></textarea>
+                </div>
+
+                <div class="col-md-6 col-sm-6 ">
+                    <label for="detail_response">Response:</label>
+                    <textarea class="form-control" name="detail_response" id="detail_response" rows="15"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-tables-modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="delete-form" data-parsley-validate class="form-horizontal form-label-left">
+                    <p>Are you sure to delete this data?</p>
+                    <input type="text" id="delete_id" name="delete_id" disabled hidden>
+
+                    <label for="delete_status">Status:</label>
+                    <input type="text" id="delete_status" name="delete_status" required="required"
+                           class="form-control">
+
+                    <label for="delete_method">Method:</label>
+                    <input type="text" id="delete_method" name="delete_method" required="required" class="form-control">
+
+                    <label for="delete_url">URL:</label>
+                    <input type="text" id="delete_url" name="delete_url" required="required" class="form-control">
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="delete_button" type="button" class="btn btn-danger" data-dismiss="modal">Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-tables-modal-insert-vul" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Insert vul</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="insert-form" data-parsley-validate class="form-horizontal form-label-left">
+                    <p>Are you sure to insert this data?</p>
+                    <input type="text" id="insert_vul_id" name="insert_vulid" disabled hidden>
+
+                    <label for="insert_vul_status">Status:</label>
+                    <input type="text" id="insert_vul_status" name="insert_vul_status" required="required"
+                           class="form-control">
+
+                    <label for="insert_vul_method">Method:</label>
+                    <input type="text" id="insert_vul_method" name="insert_vul_method" required="required" class="form-control">
+
+                    <label for="insert_vul_url">URL:</label>
+                    <input type="text" id="insert_vul_url" name="insert_vul_url" required="required" class="form-control">
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="insert_vul_button" type="button" class="btn btn-warning" data-dismiss="modal">Insert vul
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/buttons.bootstrap.min.js') }}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var cache_datatable = $("#cache_datatable").DataTable({
+            retrieve: true,
+            paging: true,
+            ordering: false,
+            info: true,
+            autoWidth: false,
+            pageLength: 10,//每页显示10条数据
+            pagingType: "simple_numbers", //分页样式：simple,simple_numbers,full,full_numbers，
+            bFilter: false, //去掉搜索框方法
+            bLengthChange: true,//也就是页面上确认是否可以进行选择一页展示多少条
+            serverSide: true, //启用服务器端分页，要进行后端分页必须的环节
+            ajax: function (data, callback, settings) {
+                //封装相应的请求参数，这里获取页大小和当前页码
+                var per_page = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候,页大小
+                var page = data.start / per_page + 1;
+                var data = {
+                    page: page,
+                    per_page: per_page,//这里只传了当前页和页大小，如果有其他参数，可继续封装
+                    url: $("#search_url").val(),
+                    keyword: $("#search_keyword").val(),
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url_for('cache.list') }}",
+                    cache: false,  //禁用缓存
+                    data: JSON.stringify(data),   //传入已封装的参数
+                    contentType: "application/json",
+                    dataType: "json",//返回数据格式为json
+                    success: function (data) {
+                        var arr = "";
+                        if ('object' == typeof data) {
+                            arr = data;
+                        } else {
+                            arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                        }
+                        var returnData = {};
+                        returnData.recordsTotal = arr.data.total;//totalCount指的是总记录数
+                        returnData.recordsFiltered = arr.data.total;//后台不实现过滤功能,全部的记录数都需输出到前端，记录数为总数
+                        returnData.data = arr.data.res;
+                        callback(returnData);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        $wrapper.spinModal(false);
+                    }
+                });
+            },
+            columns: [
+                {
+                    "data": null, "width": "20px", "defaultContent": "",
+                    "render": function (data, type, full, meta) {
+                        return '<input type="checkbox"  class="checkchild"  value="' + data.id + '" />';
+                    },
+                },
+                {"data": "id", "width": "10px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
+                {"data": "keyword", "width": "20px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
+                {"data": "response_status_code", "width": "20px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
+                // {"data": "method", "width": "20px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
+                {"data": "url", "width": "200px", "defaultContent": "", "render": $.fn.dataTable.render.ellipsis(67,true,true)},
+                // {"data": "addon_path", "width": "100px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
+                {"data": "update_time", "width": "100px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
+                {
+                    "data": null, "width": "30px", "defaultContent": "" +
+                        "<button id=\"detailRow\" type=\"button\" class=\"btn btn-primary btn-table-sm\" data-toggle=\"modal\" data-target=\".bs-tables-modal-detail\"><span> <i class=\"fa fa-file-text-o\"></i></span> </button>" +
+                        "<button id=\"insertVulRow\" type=\"button\" class=\"btn btn-warning btn-table-sm\" data-toggle=\"modal\" data-target=\".bs-tables-modal-insert-vul\"><span> <i class=\"fa fa-chevron-right\"></i></span> </button>" +
+                        "<button id=\"delRow\" type=\"button\" class=\"btn btn-danger btn-table-sm\" data-toggle=\"modal\" data-target=\".bs-tables-modal-delete\"><span> <i class=\"fa fa-remove\"></i></span> </button>"
+                },
+            ],
+        });
+        $('#cache_datatable tbody').on('click', 'button#delRow', function () {
+            var row = cache_datatable.row($(this).parents('tr')).data();
+            $("#delete_id").val(row.id);
+            $("#delete_status").val(row.response_status_code);
+            $("#delete_url").val(row.url);
+            $("#delete_method").val(row.method);
+        });
+        $('#cache_datatable tbody').on('click', 'button#insertVulRow', function () {
+            var row = cache_datatable.row($(this).parents('tr')).data();
+            $("#insert_vul_id").val(row.id);
+            $("#insert_vul_status").val(row.response_status_code);
+            $("#insert_vul_url").val(row.url);
+            $("#insert_vul_method").val(row.method);
+        });
+        $('#cache_datatable tbody').on('click', 'button#detailRow', function () {
+            var row = cache_datatable.row($(this).parents('tr')).data();
+            var data = {
+                "id": row.id,
+            };
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('cache.detail') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        var cache = arr.data.res[0];
+                        $("#detail_url").val(cache.url);
+                        $("#detail_request").val(cache.request);
+                        $("#detail_response").val(cache.response);
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            });
+        });
+        $("#search_button").click(function () {
+            cache_datatable.ajax.reload();
+        });
+        $("#select_delete_button").click(function () {
+            var ids = '';
+            $(".checkchild:checked").each(function (k) {
+                if (k == 0) {
+                    ids = $(this).val();
+                } else {
+                    ids += ',' + $(this).val();
+                }
+            });
+            var data = {
+                "ids": ids,
+            };
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('cache.delete') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        cache_datatable.row().remove().draw(false);//删除这行的数据
+                        $(".checkall").prop("checked", false);
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            })
+        });
+        $("#select_clear_all_button").click(function () {
+            var data = {};
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('cache.clear_all') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        cache_datatable.ajax.reload();
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            })
+        });
+        $("#select_clear_3day_old_button").click(function () {
+            var data = {};
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('cache.clear_3day_old') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        packet_datatable.ajax.reload();
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            })
+        });
+        $("#delete_button").click(function () {
+            var data = {
+                "id": $("#delete_id").val(),
+            };
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('cache.list') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        cache_datatable.row().remove().draw(false);//删除这行的数据
+                        // cache_datatable.ajax.reload();
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            });
+        });
+        $("#insert_vul_button").click(function () {
+            var data = {
+                "id": $("#insert_vul_id").val(),
+            };
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('cache.insert_vul') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        window.location.href = "{{ url_for('vul.index') }}";
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            });
+        });
+        $(".checkall").click(function () {
+            var check = $(this).prop("checked");
+            $(".checkchild").prop("checked", check);
+        });
+    })
+</script>
+{% endblock %}
