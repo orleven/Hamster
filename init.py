@@ -48,6 +48,8 @@ async def create_table(flag=False):
 
 async def init_black_list():
     black_list = [
+        {"match_position": ScanMatchPosition.PATH, "value": u"/wp-", "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.PATH, "value": u".min.js", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.PATH, "value": u"/docs/", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.PATH, "value": u"/examples/jsp/", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.PATH, "value": u".css", "match_type": ScanMatchType.IN},
@@ -69,6 +71,8 @@ async def init_black_list():
         {"match_position": ScanMatchPosition.HOST, "value": u"googleapis.com", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.HOST, "value": u"trackingio.com", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.HOST, "value": u"github.com", "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.HOST, "value": u"githubassets.com", "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.HOST, "value": u"gitlab.com", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.HOST, "value": u"getui.com", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.HOST, "value": u"gov.cn", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.HOST, "value": u"org.cn", "match_type": ScanMatchType.IN},
@@ -80,6 +84,9 @@ async def init_black_list():
         {"match_position": ScanMatchPosition.HOST, "value": u"39.102.194.95", "match_type": ScanMatchType.EQUAL},
         {"match_position": ScanMatchPosition.HOST, "value": "localhost", "match_type": ScanMatchType.EQUAL},
         {"match_position": ScanMatchPosition.HOST, "value": "127.0.0.1", "match_type": ScanMatchType.EQUAL},
+        {"match_position": ScanMatchPosition.METHOD, "value": "DELETE", "match_type": ScanMatchType.EQUAL},
+        {"match_position": ScanMatchPosition.METHOD, "value": "OPTIONS", "match_type": ScanMatchType.EQUAL},
+        {"match_position": ScanMatchPosition.METHOD, "value": "CONNECT", "match_type": ScanMatchType.EQUAL},
         {"match_position": ScanMatchPosition.HOST, "value": ".*\d{5}.cn", "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": ".*refresh.*", "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": ".*delete.*", "match_type": ScanMatchType.REGEX},

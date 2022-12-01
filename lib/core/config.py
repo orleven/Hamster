@@ -57,7 +57,7 @@ def basic_config():
         ("scan", f"This is a scan config for {PROJECT_NAME}"): {
             ("scan_max_task_num", ""): 50,
             ("scan_mode", f"{ScanMode.CACHE}/{ScanMode.NOCACHE}"): ScanMode.CACHE,
-            ("scan_headers", ""): {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:106.0) Gecko/20100101 Firefox/106.0"},
+            ("scan_headers", ""): {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:106.0; aiohttp) Gecko/20100101 Firefox/106.0"},
             ("scan_qps_limit", ""): 5,
             ("scan_body_size_limit", ""): 4195000,
             ("save_body_size_limit", "Max length < 131080"): 32768,
