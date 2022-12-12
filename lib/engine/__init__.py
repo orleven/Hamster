@@ -3,6 +3,8 @@
 # @author: orleven
 
 import traceback
+
+
 from lib.core.env import *
 import os
 import asyncio
@@ -45,6 +47,7 @@ from lib.core.data import save_jsonp_list
 from lib.core.data import query_addon_info_by_addon_path
 from lib.core.data import delete_cache_before_day
 from lib.core.data import query_cache_by_keyword
+from lib.core.common import vul_filter
 from lib.util.util import get_time
 from lib.util.util import get_timestamp
 from lib.util.util import get_time_str
