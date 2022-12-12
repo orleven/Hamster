@@ -345,7 +345,11 @@ class XrayPOC:
             return eval(cel)
         except Exception as e:
             msg = str(e)
-            if not ("is not defined" in msg and "name" in msg and "()" in cel):
+            if "is not defined" in msg and "name" in msg and "()" in cel:
+                return False
+            elif "is not defined" in msg and "name" in msg and "response" in cel:
+                return False
+            else:
                 traceback.print_exc()
                 print(f'Error eval, name: {self.name}, cel: {cel}, error : {msg}')
             return False

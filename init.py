@@ -17,6 +17,7 @@ from lib.core.model import DictPassword
 from lib.core.model import DictUsername
 from lib.core.model import ScanBlack
 from lib.core.model import ScanWhite
+from lib.core.model import VulFilter
 from lib.core.enums import ScanMatchPosition
 from lib.core.enums import ScanMatchType
 from lib.core.enums import UserRole
@@ -45,6 +46,20 @@ async def create_table(flag=False):
         await session.run_sync(Base.metadata.create_all)
         await session.commit()
 
+async def init_filter_list():
+    filter_list = [
+        {"match_position": ScanMatchPosition.RESPONSE_BODY, "value": u'waf', "match_type": ScanMatchType.IN},
+    ]
+    async with async_session.begin() as session:
+        for filter in filter_list:
+            match_position = filter["match_position"]
+            value = filter["value"]
+            match_type = filter["match_type"]
+            update_time = get_time()
+            filter = VulFilter(match_position=match_position, value=value, match_type=match_type,
+                              update_time=update_time)
+            session.add(filter)
+        await session.commit()
 
 async def init_black_list():
     black_list = [
@@ -254,6 +269,7 @@ async def run(args):
     """
     await create_table()
     await init_user()
+    await init_filter_list()
     await init_black_list()
     await init_white_list()
     await init_username_list()

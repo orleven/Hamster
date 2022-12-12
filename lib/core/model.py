@@ -565,6 +565,27 @@ class ScanWhite(Base):
         }
         return json_data
 
+class VulFilter(Base):
+    """扫描时间"""
+
+    __tablename__ = "vul_filter"
+    id = Column(Integer(), primary_key=True, autoincrement=True)
+    match_position = Column(String(255))
+    value = Column(String(255))
+    match_type = Column(String(255))
+    update_time = Column(DateTime(), default=get_time())
+    mark = Column(Text())
+
+    def to_json(self):
+        json_data = {
+            "id": self.id,
+            "match_position": self.match_position,
+            "value": self.value,
+            "match_type": self.match_type,
+            "mark": self.mark,
+            "update_time": get_time_str(self.update_time) if self.update_time else None,
+        }
+        return json_data
 
 class ScanBlack(Base):
     """扫描黑名单"""

@@ -18,6 +18,7 @@ from lib.core.model import Engine
 from lib.core.model import DNSLog
 from lib.core.model import ScanWhite
 from lib.core.model import ScanBlack
+from lib.core.model import VulFilter
 from lib.core.model import DictPassword
 from lib.core.model import DictUsername
 from lib.core.model import CollectParam
@@ -175,6 +176,10 @@ async def query_dnslog_list():
 
     return await sql_query(model=DNSLog)
 
+async def query_vul_filter_list():
+    """查询时间"""
+
+    return await sql_query(model=VulFilter)
 
 async def query_dnslog_by_keyword(keyword):
     """查询dnslog信息"""

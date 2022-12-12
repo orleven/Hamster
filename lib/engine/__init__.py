@@ -32,6 +32,7 @@ from lib.core.data import query_scan_white_list
 from lib.core.data import query_dict_password_list
 from lib.core.data import query_dict_username_list
 from lib.core.data import query_scan_time_list
+from lib.core.data import query_vul_filter_list
 from lib.core.data import query_engine_info_by_id
 from lib.core.data import save_vul
 from lib.core.data import save_email_list
@@ -153,7 +154,8 @@ class BaseEngine(object):
                     (vul, addon_path) = await vul_queue.get()
                     addon = await query_addon_info_by_addon_path(addon_path)
                     vul["addon_id"] = addon.get("id", "") if addon and isinstance(addon, dict) else None
-                    await save_vul(vul)
+                    if not vul_filter(vul):
+                        await save_vul(vul)
 
                 cache_list = []
                 while not cache_queue.empty() and len(cache_list) < self.max_data_queue_num:
@@ -283,6 +285,7 @@ class BaseEngine(object):
                     conf.scan.scan_time = await query_scan_time_list()
                     conf.scan.dict_username = await query_dict_username_list()
                     conf.scan.dict_password = await query_dict_password_list()
+                    conf.scan.vul_fillter = await query_vul_filter_list()
 
                     if MAIN_NAME != 'simple':
                         # 检查redis状态

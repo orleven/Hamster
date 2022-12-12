@@ -76,6 +76,7 @@ def handle_options(args):
     conf.scan.scan_time = []
     conf.scan.dict_username = []
     conf.scan.dict_password = []
+    conf.scan.vul_filter = []
 
     # debug 模式
     conf.basic.debug = args.debug

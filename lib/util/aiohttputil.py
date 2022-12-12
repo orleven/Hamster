@@ -235,14 +235,24 @@ class ClientSession(aiohttp.ClientSession):
             await self.__save_cache_by_none(keyword, method, url, headers, message.is_text)
         return None
 
-
-
     async def _request(self, method, url, keyword: str = None, **kwargs):
         """
         重写_request函数，功能与原相同， 增加默认代理等配置
         """
         kwargs = self.__pre_deal(False, **kwargs)
-        data = b''
+
+        # 处理data
+        json_data = kwargs.get('json', None)
+        if json_data:
+            data = json.dumps(json_data)
+        else:
+            data = kwargs.get('data', None)
+        if data:
+            if isinstance(data, str):
+                data = bytes(data, 'utf-8')
+        else:
+            data = b''
+
         total = self.__max_retries + 1
         for count in range(total):
             if count > 0:
@@ -255,17 +265,6 @@ class ClientSession(aiohttp.ClientSession):
                 resp = await super()._request(method, url, **kwargs)
 
                 # 临时加入request_content参数，便于数据包存储
-                json_data = kwargs.get('json', None)
-                if json_data:
-                    data = json.dumps(json_data)
-                else:
-                    data = kwargs.get('data', None)
-
-                if data:
-                    if isinstance(data, str):
-                        data = bytes(data, 'utf-8')
-                else:
-                    data = b''
                 resp.__dict__['request_content'] = data
 
                 # 保存缓存

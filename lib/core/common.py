@@ -2,6 +2,7 @@
 # -*- encoding: utf-8 -*-
 # @author: orleven
 
+import re
 from lib.core.env import *
 import json
 from copy import deepcopy
@@ -10,8 +11,11 @@ from lib.core.g import conf
 from lib.core.g import redis
 from addon import BaseAddon
 from lib.core.enums import AddonType
+from lib.core.enums import ScanMatchType
+from lib.core.enums import ScanMatchPosition
 from lib.core.enums import FlowType
 from lib.util.util import get_time_str
+from lib.util.util import get_base_url
 from lib.util.util import get_url_normpath_list
 from lib.util.cipherutil import md5
 
@@ -120,3 +124,76 @@ async def hander_scan_list(scan_list, addon_type, addon_list, flow_type, method,
             log.error(f"Error hander_scan_list, url: {url}, error: {str(e)}")
         return False, flow_hash
     return False, None
+
+def vul_filter(vul):
+
+    flag = False
+
+    try:
+        host = vul.get("host", "")
+
+        if host == conf.basic.listen_domain:
+            flag = True
+
+        if conf.platform.dnslog_top_domain in host:
+            flag = True
+
+        if conf.scan.vul_fillter:
+            url = vul.get("url", None)
+            addon_path = vul.get("addon_path", None)
+            for vul_fillter in conf.scan.vul_fillter:
+                match_position = vul_fillter.get("match_position", "")
+                match_type = vul_fillter.get("match_type", "")
+                value = vul_fillter.get("value", "")
+
+                if match_position == ScanMatchPosition.HOST:
+                    target = host
+
+                elif match_position == ScanMatchPosition.URL:
+                    target = url
+
+                elif match_position == ScanMatchPosition.PATH:
+                    target = url
+                    if target:
+                        if '?' in target:
+                            target = target[:target.index('?')]
+                        target = target[len(get_base_url(target)) - 1:]
+
+                elif match_position == ScanMatchPosition.METHOD:
+                    target = vul.get("method", None)
+
+                elif match_position == ScanMatchPosition.RESPONSE_BODY:
+                    target = vul.get("response_content", None)
+
+                elif match_position == ScanMatchPosition.STATUS:
+                    target = vul.get("response_status_code", None)
+
+                elif match_position == ScanMatchPosition.RESPONSE_HEADERS:
+                    target = vul.get("request_headers", None)
+
+                else:
+                    target = None
+
+                if target is not None:
+                    if isinstance(target, bytes):
+                        target = target.decode('utf-8')
+                    elif isinstance(target, int):
+                        target = str(target)
+
+                    if match_type == ScanMatchType.EQUAL:
+                        if value == target:
+                            flag = True
+
+                    elif match_type == ScanMatchType.IN:
+                        if value in target:
+                            flag = True
+
+                    elif match_type == ScanMatchType.REGEX:
+                        if re.search(value, target, re.M | re.I):
+                            flag = True
+
+                    if flag:
+                        log.warning(f"Filter vul, url: {url}, addon: {addon_path}")
+        return flag
+    except:
+        return flag

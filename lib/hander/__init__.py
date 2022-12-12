@@ -71,6 +71,9 @@ app.register_blueprint(blackhander.mod)
 from lib.hander.manager.setting import timehander
 app.register_blueprint(timehander.mod)
 
+from lib.hander.manager.setting import filterhander
+app.register_blueprint(filterhander.mod)
+
 from lib.hander.manager.system import enginehander
 app.register_blueprint(enginehander.mod)
 
