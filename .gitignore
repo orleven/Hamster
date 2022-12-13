@@ -12,7 +12,5 @@ venv/
 log/
 conf/
 dev/
-#addon/
 tool/
-
-test.py
+#addon/
