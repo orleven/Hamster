@@ -1,0 +1,8 @@
+# project
+.idea
+.git
+.DS_Store
+
+# python project
+*.pyc
+__pycache__
