@@ -53,6 +53,7 @@ class ScanMatchPosition:
     HOST = "Host"
     URL = "Url"
     PATH = "Path"
+    QUERY = "Query"
     STATUS = "Status"
     METHOD = "Method"
     # REQUEST_HEADERS = "RequestHeaders"

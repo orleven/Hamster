@@ -307,10 +307,13 @@ class BaseAddon(object):
                     target = host
 
                 elif match_position == ScanMatchPosition.URL:
-                    target = self.get_url_no_query(flow)
+                    target = self.get_url(flow)
 
                 elif match_position == ScanMatchPosition.PATH:
                     target = self.get_path_no_query(flow)
+
+                elif match_position == ScanMatchPosition.QUERY:
+                    target = self.get_query(flow)
 
                 elif match_position == ScanMatchPosition.METHOD:
                     target = self.get_method(flow)

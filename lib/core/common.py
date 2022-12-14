@@ -159,6 +159,13 @@ def vul_filter(vul):
                             target = target[:target.index('?')]
                         target = target[len(get_base_url(target)) - 1:]
 
+                elif match_position == ScanMatchPosition.QUERY:
+                    target = url
+                    if target and '?' in target:
+                        target = target[target.index('?') + 1:]
+                    else:
+                        target = None
+
                 elif match_position == ScanMatchPosition.METHOD:
                     target = vul.get("method", None)
 

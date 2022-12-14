@@ -48,9 +48,11 @@ def list():
     value = request.json.get('value', '')
     match_type = request.json.get('match_type', '')
     condition = (1 == 1)
-    if match_position != '' and match_position in [ScanMatchPosition.HOST, ScanMatchPosition.URL, ScanMatchPosition.PATH,
-                                                   ScanMatchPosition.STATUS, ScanMatchPosition.METHOD,
-                                                   ScanMatchPosition.RESPONSE_HEADERS, ScanMatchPosition.RESPONSE_BODY]:
+    if match_position != '' and match_position in[
+        ScanMatchPosition.HOST, ScanMatchPosition.URL, ScanMatchPosition.PATH, ScanMatchPosition.QUERY,
+        ScanMatchPosition.STATUS, ScanMatchPosition.METHOD, ScanMatchPosition.RESPONSE_HEADERS,
+        ScanMatchPosition.RESPONSE_BODY
+    ]:
         condition = and_(condition, VulFilter.match_position == match_position)
 
     if value != '':
@@ -79,8 +81,11 @@ def edit():
     mark = request.json.get('mark', '')
     match_type = request.json.get('match_type', '')
 
-    if match_position not in [ScanMatchPosition.HOST, ScanMatchPosition.URL, ScanMatchPosition.PATH, ScanMatchPosition.STATUS,
-                              ScanMatchPosition.METHOD, ScanMatchPosition.RESPONSE_HEADERS, ScanMatchPosition.RESPONSE_BODY]:
+    if match_position not in [
+        ScanMatchPosition.HOST, ScanMatchPosition.URL, ScanMatchPosition.PATH, ScanMatchPosition.QUERY,
+        ScanMatchPosition.STATUS, ScanMatchPosition.METHOD, ScanMatchPosition.RESPONSE_HEADERS,
+        ScanMatchPosition.RESPONSE_BODY
+    ]:
         return ApiStatus.ERROR_INVALID_INPUT
 
     if value == '':
@@ -113,8 +118,11 @@ def add():
     mark = request.json.get('mark', '')
     match_type = request.json.get('match_type', '')
 
-    if match_position not in [ScanMatchPosition.HOST, ScanMatchPosition.URL, ScanMatchPosition.PATH, ScanMatchPosition.STATUS,
-                              ScanMatchPosition.METHOD, ScanMatchPosition.RESPONSE_HEADERS, ScanMatchPosition.RESPONSE_BODY]:
+    if match_position not in [
+        ScanMatchPosition.HOST, ScanMatchPosition.URL, ScanMatchPosition.PATH, ScanMatchPosition.QUERY,
+        ScanMatchPosition.STATUS, ScanMatchPosition.METHOD, ScanMatchPosition.RESPONSE_HEADERS,
+        ScanMatchPosition.RESPONSE_BODY
+    ]:
         return ApiStatus.ERROR_INVALID_INPUT
 
     if value == '':
