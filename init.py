@@ -48,7 +48,7 @@ async def create_table(flag=False):
 
 async def init_filter_list():
     filter_list = [
-        {"match_position": ScanMatchPosition.RESPONSE_BODY, "value": u'waf', "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.RESPONSE_BODY, "value": u'g.alicdn.com/sd/punish/waf_block', "match_type": ScanMatchType.IN},
     ]
     async with async_session.begin() as session:
         for filter in filter_list:
