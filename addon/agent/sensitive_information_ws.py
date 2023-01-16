@@ -54,6 +54,7 @@ class Addon(AgentAddon):
             "accessId": r"accessId\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
             "accessKey": r"accessKey\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
             "secretKey": r"secretKey\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
+            "jdbc": "jdbc\:\S{2,10}\://\S([0-9a-zA-Z%\+\=\/\-\_\?\:]{16,256})",
         }
         self.regex_body_size_limit = 262144
 

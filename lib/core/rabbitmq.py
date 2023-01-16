@@ -4,6 +4,8 @@
 
 import asyncio
 import aio_pika
+import traceback
+
 
 class RabbitMQ(object):
 
@@ -28,7 +30,7 @@ class RabbitMQ(object):
 
     async def connect(self):
         if not self.channel or self.channel.is_closed:
-            self.queue_map = {}
+            self.queue_dic = {}
             retry_count = self.retry_count
             while retry_count:
                 try:
@@ -51,10 +53,14 @@ class RabbitMQ(object):
     async def close(self):
         try:
             if self.channel and not self.channel.is_closed:
-                await self.channel.close()
                 await self.connection.close()
+                await self.channel.close()
         except:
             pass
+        finally:
+            self.channel = None
+            self.connection = None
+            self.exchange = None
 
     async def consumer(self, callback):
         while True:
@@ -67,20 +73,24 @@ class RabbitMQ(object):
                             await message.ack()
                         else:
                             await asyncio.sleep(0.1)
-                except RuntimeError as e:
-                    print(e)
+                except:
+                    traceback.print_exc()
+                    await self.close()
+            await asyncio.sleep(0.1)
 
     async def bind_routing_key(self, routing_key):
-        if routing_key not in self.queue_dic.keys():
-            queue = await self.channel.declare_queue(name=routing_key, durable=True)
-            await queue.bind(self.exchange, routing_key)
-            self.queue_dic[routing_key] = queue
+        if await self.connect():
+            if routing_key not in self.queue_dic.keys():
+                queue = await self.channel.declare_queue(name=routing_key, durable=True)
+                await queue.bind(self.exchange, routing_key)
+                self.queue_dic[routing_key] = queue
 
     async def unbind_routing_key(self, routing_key):
-        if routing_key in self.queue_dic.keys():
-            # await self.queue_dic[routing_key].unbind(self.exchange, routing_key)
-            self.queue_dic[routing_key] = None
-            del self.queue_dic[routing_key]
+        if await self.connect():
+            if routing_key in self.queue_dic.keys():
+                # await self.queue_dic[routing_key].unbind(self.exchange, routing_key)
+                self.queue_dic[routing_key] = None
+                del self.queue_dic[routing_key]
 
     def get_routing_key_list(self):
         return self.queue_dic.keys()
