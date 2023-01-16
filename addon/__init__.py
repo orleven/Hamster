@@ -87,7 +87,7 @@ class BaseAddon(object):
         self.addon_path = self.addon_absolute_path[len(ROOT_PATH) + 1:]
         self.addon_file_name = os.path.basename(self.addon_path)
         self.addon_md5 = get_file_md5(self.addon_absolute_path)
-        statinfo = os.stat(self.addon_absolute_path)s
+        statinfo = os.stat(self.addon_absolute_path)
         self.file_create_time = get_time_str(get_time(statinfo.st_ctime))
         self.file_update_time = get_time_str(get_time(statinfo.st_mtime))
 
