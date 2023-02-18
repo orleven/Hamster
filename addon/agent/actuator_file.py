@@ -40,6 +40,7 @@ class Addon(AgentAddon):
             "web/",
             "swagger/",
             "gateway/actuator/",
+            "..;/"
             # "%61%63%74%75%61%74%6f%72/",  # aiohttp 目前版本户会自动解码url编码
         ]
         self.file_dic = {
