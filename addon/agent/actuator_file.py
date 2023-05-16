@@ -44,7 +44,7 @@ class Addon(AgentAddon):
             # "%61%63%74%75%61%74%6f%72/",  # aiohttp 目前版本户会自动解码url编码
         ]
         self.file_dic = {
-            "consul": "services",
+            "consul": "servicestags",
             "swagger-ui.html": 'swaggerui',
             "swagger.json": "\"swagger\"",
             "metrics": "\"names\"",
@@ -52,9 +52,9 @@ class Addon(AgentAddon):
             "env": "spring",
             "routes": "\"route_",
             "mappings": "springframework",
-            "loggers": "\"loggers\"",
+            "loggers": "\"configuredLevel\":\"INFO\"",
             "hystrix.stream": "hystrixcommand",
-            "auditevents": "\"events\"",
+            "auditevents": "\"events\":",
             "httptrace": "\"headers\":{",
             "features": "springframework",
             "caches": "cachemanagers",
@@ -62,9 +62,9 @@ class Addon(AgentAddon):
             "conditions": "springframework",
             "configprops": "spring",
             "threaddump": "springframework",
-            "scheduledtasks": "cron",
+            "scheduledtasks": "\"cron\":",
             "api-docs": "\"swagger\"",
-            "mappings.json": "bean:",
+            "mappings.json": "{\"bean\":",
             "trace": "\"headers\":{",
             "dump": "threadname",
             "gateway/routes": "\"predicate\":",

@@ -45,7 +45,7 @@ class Addon(AgentAddon):
         ]
         self.skip_collect_extensions = [
             "js", "css", "ico", "png", "jpg", "video", "audio", "ttf", "jpeg", "gif", "woff",
-            "map", 'woff2', 'bin', 'wav', 'md', "mp3", "vue", "jpeg"
+            "map", 'woff2', 'bin', 'wav', 'md', "mp3", "vue", "jpeg", "exe"
         ]
         self.skip_scan_media_types = [
             "image", "video", "audio"

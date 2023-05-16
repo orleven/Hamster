@@ -97,6 +97,8 @@ class Addon(AgentAddon):
                                 await self.save_vul(res, detail)
 
                     self.log.debug(f"Final scan xray poc: {xray_poc.name}")
+                except TimeoutError:
+                    self.log.error(f"Error scan xray poc: {xray_poc.name}, error: {str(e)}")
                 except Exception as e:
                     self.log.error(f"Error scan xray poc: {xray_poc.name}, error: {str(e)}")
                     traceback.print_exc()

@@ -500,7 +500,10 @@ class BaseAddon(object):
     def get_path_component(flow: HTTPFlow):
         """获取path并按斜杠分割"""
 
-        return list(flow.request.path_components)
+        component = list(flow.request.path_components)
+        if len(component) == 0:
+            component = ['']
+        return component
 
     @staticmethod
     def get_path_file(flow: HTTPFlow):

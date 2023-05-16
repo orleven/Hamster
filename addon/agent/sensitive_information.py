@@ -38,13 +38,13 @@ class Addon(AgentAddon):
             "sso", "function", "this", "that", "define", "storage", "instruction", "__",
             "true", "false", "text", "hidden", "null", "before", "code", "input", "async", 'change',
             "pend", "this", "hide", "after", "new", "object", "string", "hover", "reset", "return", "void", "escape",
-            "crypt"
+            "crypt", "8192", "digit", "alidate"
         ]
         self.black_token_list = [
             "sso", "function", "this", "that", "define", "storage", "instruction",
             "true", "false", "text", "hidden", "null", "before", "code", "input", "async", 'change',
             "pend", "this", "hide", "after", "new", "object", "string", "hover", "reset", "return", "void", "escape",
-            "crypt"
+            "crypt", "8192", "digit", "alidate"
         ]
         self.regex_map = {
             # "mail": r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]+)",
@@ -60,9 +60,8 @@ class Addon(AgentAddon):
             "secretKey": r"secretKey\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
             "apiID": r"apiID\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
             "apiKey": r"apiKey\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
-            "jdbc": r"jdbc\:\S{2,10}\://\S([0-9a-zA-Z%\+\=\/\-\_\?\:]{16,256})",
-            "auth": r"[a-z]{2,8}\://([a-zA-Z0-9_.+-]+\:[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]+)",
-            "password-input": r"<input\s+.*name=\"password\".*value=\"([a-zA-Z0-9\!\@\#\$\^]+?)\\?\".*/>",
+            "jdbc": r"jdbc\:\S{2,10}\://\S[0-9a-zA-Z%\+\=\/\-\_\?\:]{16,256}",
+            "auth": r"[a-z]{2,8}\://[a-zA-Z0-9_.+-]+\:[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]+",
         }
         self.regex_body_size_limit = 262144
 

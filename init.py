@@ -63,6 +63,8 @@ async def init_filter_list():
 
 async def init_black_list():
     black_list = [
+        {"match_position": ScanMatchPosition.METHOD, "value": u"DELETE", "match_type": ScanMatchType.EQUAL},
+        {"match_position": ScanMatchPosition.METHOD, "value": u"OPSTIONS", "match_type": ScanMatchType.EQUAL},
         {"match_position": ScanMatchPosition.PATH, "value": u"/wp-", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.PATH, "value": u".min.js", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.PATH, "value": u"/docs/", "match_type": ScanMatchType.IN},
@@ -106,6 +108,9 @@ async def init_black_list():
         {"match_position": ScanMatchPosition.PATH, "value": ".*refresh.*", "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": ".*delete.*", "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": ".*clear.*", "match_type": ScanMatchType.REGEX},
+        {"match_position": ScanMatchPosition.PATH, "value": '.*insert.*', "match_type": ScanMatchType.REGEX},
+        {"match_position": ScanMatchPosition.PATH, "value": '.*save.*', "match_type": ScanMatchType.REGEX},
+        {"match_position": ScanMatchPosition.PATH, "value": '.*remove.*', "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": "(/\S+)\1/", "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": u"/\d{4}/\d{2}/\d{2}/", "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.URL, "value": '^(http|https)://10\..*', "match_type": ScanMatchType.REGEX},

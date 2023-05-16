@@ -134,8 +134,8 @@ def xray_cel_bmatches(rex, target):
     """
     "root:[x*]:0:0:".bmatches(
     """
-    if isinstance(target, str):
-        target = bytes(target, encoding="utf-8")
+    if isinstance(rex, str):
+        rex = bytes(rex, encoding="utf-8")
 
     res = re.match(rex, target)
     if res:
@@ -146,9 +146,8 @@ def xray_cel_bsubmatch(rex, target):
     "activemq.home=(?P<home>.*?),".bsubmatch(
     """
 
-
-    if isinstance(target, str):
-        target = bytes(target, encoding="utf-8")
+    if isinstance(rex, str):
+        rex = bytes(rex, encoding="utf-8")
 
     res = re.search(rex, target)
     if res:
@@ -305,9 +304,11 @@ class XrayPOC:
         cel = cel.replace("substr", "xray_cel_substr")
         cel = cel.replace("sleep", "xray_cel_sleep")
 
+        cel = re.sub('response.body.iontains\S*?\((b)*', "xray_cel_icontains(content, ", cel, flags=re.S)
         cel = re.sub('response.body.contains\S*?\((b)*', "xray_cel_contains(content, ", cel, flags=re.S)
         cel = re.sub('response.body.bcontains\S*?\((b)*', "xray_cel_bcontains(content, ", cel, flags=re.S)
         cel = re.sub('response.content_type.icontains\S*?\((b)*', "xray_cel_icontains(content_type, ", cel, flags=re.S)
+        cel = re.sub('response.content_type.bcontains\S*?\((b)*', "xray_cel_bcontains(content_type, ", cel, flags=re.S)
         cel = re.sub('response.content_type.contains\S*?\((b)*', "xray_cel_contains(content_type, ", cel, flags=re.S)
 
         cel = re.sub('\".+?\"\.bsubmatch\S*?\(', lambda x: "xray_cel_bsubmatch(r" + x.group(0).rstrip(".bsubmatch(") + ", ", cel, flags=re.S)
@@ -316,7 +317,10 @@ class XrayPOC:
         cel = cel.replace("response.headers", "headers")
         cel = cel.replace("response.status", "status")
         cel = cel.replace("response.body", "content")
-        cel = cel.replace("response.body", "content")
+
+        cel = re.sub('headers\[\".*?\"\].icontains\S*?\((b)*', lambda x: "xray_cel_icontains(" + x.group(0).rstrip(".contains(") + ", ", cel, flags=re.S)
+        cel = re.sub('headers\[\".*?\"\].contains\S*?\((b)*', lambda x: "xray_cel_contains(" + x.group(0).rstrip(".contains(") + ", ", cel, flags=re.S)
+        cel = re.sub('headers\[\".*?\"\].bontains\S*?\((b)*', lambda x: "xray_cel_bcontains(" + x.group(0).rstrip(".contains(") + ", ", cel, flags=re.S)
 
         cel = cel.replace("reverse.wait", "xray_cel_reverse_wait")
 

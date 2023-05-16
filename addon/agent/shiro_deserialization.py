@@ -215,7 +215,7 @@ class Addon(AgentAddon):
 
 
     async def prove_shiro(self, method, url, data, headers, mode=AES.MODE_GCM):
-        mode_name = 'AES.MODE_GCM' if mode == AES.MODE_GCM else 'AES.MODE_GCM'
+        mode_name = 'AES.MODE_GCM' if mode == AES.MODE_GCM else 'AES.MODE_CBC'
         async with ClientSession(self.addon_path) as session:
             for i in range(0, len(self.keylist)):
                 temp_headers = deepcopy(headers)
@@ -236,4 +236,3 @@ class Addon(AgentAddon):
                                 await self.save_vul(res, detail)
                                 return True
         return False
-
