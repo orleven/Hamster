@@ -11,6 +11,7 @@ import traceback
 import aiohttp
 from lib.core.env import *
 from yarl import URL
+from copy import deepcopy
 from typing import Any
 from typing import Union
 from typing import Type
@@ -142,7 +143,6 @@ class ClientSession(aiohttp.ClientSession):
         """Initiate websocket connection."""
         return WSRequestContextManager(self._ws_connect(url, **kwargs))
 
-
     def __pre_deal(self, ws_flag=False, **kwargs):
         """参数预处理"""
 
@@ -150,7 +150,8 @@ class ClientSession(aiohttp.ClientSession):
         kwargs.setdefault('verify_ssl', False)
 
         # 增加默认ua
-        headers = kwargs.get('headers', {})
+        headers = deepcopy(kwargs.get('headers', {}))
+
         user_agent = headers.get("User-Agent", 'aiohttp')
         if 'aiohttp' in user_agent:
             headers["User-Agent"] = random_ua()
@@ -172,7 +173,7 @@ class ClientSession(aiohttp.ClientSession):
             headers['Cookie'] = '; '.join(['='.join([key, value]) for key, value in cookie.items()])
 
         # 设置headers
-        kwargs.setdefault('headers', headers)
+        kwargs['headers'] = headers
 
         if kwargs.get('proxy') is None:
             if MAIN_NAME != 'simple' and conf.agent.hasattr("support_proxy") and conf.agent.support_proxy.startswith('http'):

@@ -68,7 +68,8 @@ def handle_options(args):
     conf.server.api_proxy = f"{conf.basic.proxy_mode}://{conf.basic.proxy_auth}@{conf.server.listen_host}:{conf.server.listen_port}"
 
     # 配置代理模式
-    conf.basic.proxy_mode = "socks5" if conf.basic.proxy_mode == "socks5" else "regular"
+    if "upstream" not in conf.basic.proxy_mode:
+        conf.basic.proxy_mode = "socks5" if conf.basic.proxy_mode == "socks5" else "regular"
 
     # 补充黑白名单/字典配置
     conf.scan.scan_black = []

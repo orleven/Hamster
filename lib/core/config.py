@@ -18,7 +18,7 @@ def env_config():
 def basic_config():
     configs = {
         ("basic", f"This is a basic config for {PROJECT_NAME}"): {
-            ("proxy_mode", "Proxy mode, http/socks5"): "http",
+            ("proxy_mode", "Proxy mode, http/socks5/upstream:http://127.0.0.1:8080/"): "http",
             ("proxy_auth", "HTTP Basic authentication to upstream proxy and reverse proxy requests. Format: username:password."): f"{PROJECT_NAME}:{PROJECT_NAME}@123",
             ("listen_domain", ""): f"admin.{PROJECT_NAME.lower()}.com",
             ("timeout", "Connection timeout"): 5,
