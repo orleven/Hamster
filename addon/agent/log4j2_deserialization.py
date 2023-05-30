@@ -43,7 +43,7 @@ class Addon(AgentAddon):
         self.black_ext_list = ['jpg', 'png', 'pdf', 'png', 'docx', 'doc', 'jpeg', 'xlsx', 'csv', 'js', 'css',  'map', 'json', 'txt']
         self.black_headers_list = ["Cookie", "Origin", "Connection", "Accept-Encoding", "Accept-Language",
                                    "Accept", "Upgrade-Insecure-Requests", "Sec-Fetch-Site", "Sec-Fetch-Mode",
-                                   "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match",
+                                   "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match", "DNT",
                                    "X-Requested-With", "Cache-Control", "content-encoding", "If-Modified-Since"]
 
     async def generate_payload(self, text=None):
@@ -70,7 +70,7 @@ class Addon(AgentAddon):
             # 替换headers参数
             for header_key, header_value in headers.items():
                 if header_key not in self.black_headers_list:
-                    test_headers = headers.copy()
+                    test_headers = deepcopy(headers)
                     async for payload, keyword in self.generate_payload():
                         test_headers[header_key] = payload
                         if await self.prove_log4j(keyword, method, url, data, test_headers):
@@ -87,9 +87,9 @@ class Addon(AgentAddon):
                         return
 
             # 替换cookies参数
-            test_headers = headers.copy()
+            test_headers = deepcopy(headers)
             for cookie_key, cookie_value in cookies.items():
-                test_cookie = cookies.copy()
+                test_cookie = deepcopy(cookies)
                 source_parameter_dic = self.parser_parameter(cookie_value)
                 async for res_function_result in self.generate_parameter_dic_by_function(source_parameter_dic, self.generate_payload):
                     temp_parameter_dic = res_function_result[0]

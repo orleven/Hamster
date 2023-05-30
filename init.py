@@ -63,8 +63,6 @@ async def init_filter_list():
 
 async def init_black_list():
     black_list = [
-        {"match_position": ScanMatchPosition.METHOD, "value": u"DELETE", "match_type": ScanMatchType.EQUAL},
-        {"match_position": ScanMatchPosition.METHOD, "value": u"OPSTIONS", "match_type": ScanMatchType.EQUAL},
         {"match_position": ScanMatchPosition.PATH, "value": u"/wp-", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.PATH, "value": u".min.js", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.PATH, "value": u"/docs/", "match_type": ScanMatchType.IN},
@@ -98,7 +96,7 @@ async def init_black_list():
         {"match_position": ScanMatchPosition.HOST, "value": u"cnzz.com", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.HOST, "value": u"189.cn", "match_type": ScanMatchType.IN},
         {"match_position": ScanMatchPosition.HOST, "value": u"360buyimg.com", "match_type": ScanMatchType.IN},
-        {"match_position": ScanMatchPosition.HOST, "value": u"39.102.194.95", "match_type": ScanMatchType.EQUAL},
+        {"match_position": ScanMatchPosition.URL, "value": u"?amp;", "match_type": ScanMatchType.EQUAL},
         {"match_position": ScanMatchPosition.HOST, "value": "localhost", "match_type": ScanMatchType.EQUAL},
         {"match_position": ScanMatchPosition.HOST, "value": "127.0.0.1", "match_type": ScanMatchType.EQUAL},
         {"match_position": ScanMatchPosition.METHOD, "value": "DELETE", "match_type": ScanMatchType.EQUAL},
@@ -109,6 +107,7 @@ async def init_black_list():
         {"match_position": ScanMatchPosition.PATH, "value": ".*delete.*", "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": ".*clear.*", "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": '.*insert.*', "match_type": ScanMatchType.REGEX},
+        {"match_position": ScanMatchPosition.PATH, "value": '.*create.*', "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": '.*save.*', "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": '.*remove.*', "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.PATH, "value": "(/\S+)\1/", "match_type": ScanMatchType.REGEX},
