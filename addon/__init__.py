@@ -462,7 +462,7 @@ class BaseAddon(object):
         for key, value in headers.items():
             flow.request.headers[key] = value
         for key, value in flow.request.headers.items():
-            if key not in headers.keys() and key != 'Content-Length':
+            if key not in headers.keys() and (key != 'Content-Length' or key != 'content-length'):
                 flow.request.headers.pop(key)
         return flow
 
@@ -598,6 +598,8 @@ class BaseAddon(object):
         if flag:
             if 'Content-Length' in res_headers.keys():
                 res_headers.pop("Content-Length")
+            if 'content-length' in res_headers.keys():
+                res_headers.pop("content-length")
         return res_headers
 
     @staticmethod

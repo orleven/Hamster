@@ -21,7 +21,7 @@ class Addon(AgentAddon):
         self.vul_name = "Actuator接口文件"
         self.level = VulLevel.MEDIUM
         self.vul_type = VulType.INFO_FILE
-        self.description = "网站存在Aactuator文件及接口，会泄露相关敏感信息。"
+        self.description = "网站存在Actuator文件及接口，会泄露相关敏感信息。"
         self.scopen = ""
         self.impact = "1. 攻击者可以通过此类接口获取接口相关信息甚至获取服务器权限。"
         self.suggestions = "1. 对敏感文件进行访问权限控制或者删除处理。"
