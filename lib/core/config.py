@@ -79,6 +79,7 @@ def basic_config():
             ("dnslog_api_url", ""): "https://api.dnslog.com/dnslog/list",
             ("dnslog_api_key", ""): "xxxxxxxxxxxxxxxxxxxx",
             ("dnslog_async_time", ""): 60,
+            ("dnslog_api_func", "you should nano func in lib/core/api.py"): "default",
         }
     }
     return configs

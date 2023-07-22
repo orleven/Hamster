@@ -20,15 +20,17 @@ from lib.util.cipherutil import safe_base64decode
 from lib.util.cipherutil import safe_urlencode
 from lib.util.cipherutil import safe_base64encode
 
-
 def get_time(timestamp: float = None):
     """获取当前时间"""
-
-    if timestamp:
-        return datetime.fromtimestamp(timestamp)
-    else:
+    try:
+        if timestamp:
+            if timestamp < 0:
+                timestamp = 0
+            return datetime.fromtimestamp(timestamp)
+        else:
+            return datetime.fromtimestamp(get_timestamp())
+    except:
         return datetime.fromtimestamp(get_timestamp())
-
 
 def get_time_str(date: datetime = None, fmt="%Y-%m-%d %H:%M:%S") -> str:
     """获取时间字符串"""

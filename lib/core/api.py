@@ -97,8 +97,16 @@ async def get_addons_file_info(addon_path, id=""):
     log.error(f"Error api request, url: {url}, error: {msg}")
     return []
 
-
 async def get_dnslog_recode(domain=None):
+
+    dnslog_api_func = conf.platform.dnslog_api_func
+    if dnslog_api_func == 'hw':
+        return await get_dnslog_recode_by_default(domain)
+    else:
+        return await get_dnslog_recode_by_default(domain)
+
+
+async def get_dnslog_recode_by_default(domain=None):
     """请求dnslog recode"""
 
     url = conf.platform.dnslog_api_url

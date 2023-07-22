@@ -85,10 +85,11 @@ class Addon(AgentAddon):
                             url = url_no_query + dir_path + file_path
                             async with session.get(url=url, headers=headers, allow_redirects=False) as res:
                                 if res and res.status == 200:
-                                    text = await res.text()
-                                    if text and file_keyword in text.lower():
-                                        detail = text
-                                        await self.save_vul(res, detail)
+                                    if "application/json" in res.headers.get("Content-Type", "text/html"):
+                                        text = await res.text()
+                                        if text and file_keyword in text.lower():
+                                            detail = text
+                                            await self.save_vul(res, detail)
 
                         url = url_no_query + dir_path + "heapdump"
                         async with session.head(url=url, headers=headers, allow_redirects=False) as res:

