@@ -235,11 +235,14 @@ class BaseAddon(object):
         if extension in self.skip_scan_request_extensions:
             return False
 
+        headers = self.get_request_headers(flow)
+        if headers.get('User-Agent', "") == conf.basic.user_agent:
+            return False
+
         return True
 
     def is_scan_to_client(self, flow):
         """websocket 是否跳过数据包，不进行扫描。"""
-
 
         if not self.__is_scan_list(flow, conf.scan.scan_white):
             return False

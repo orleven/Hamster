@@ -259,6 +259,7 @@ class BaseEngine(object):
                     await vul_queue.put((vul, addon_path))
         except Exception as e:
             msg = str(e)
+            traceback.print_exc()
             log.error(f"Error async dnslog recode, error: {msg}")
 
     async def heartbeat(self):

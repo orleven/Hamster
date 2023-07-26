@@ -99,11 +99,8 @@ async def get_addons_file_info(addon_path, id=""):
 
 async def get_dnslog_recode(domain=None):
 
-    dnslog_api_func = conf.platform.dnslog_api_func
-    if dnslog_api_func == 'hw':
-        return await get_dnslog_recode_by_default(domain)
-    else:
-        return await get_dnslog_recode_by_default(domain)
+    # dnslog_api_func = conf.platform.dnslog_api_func 后续添加功能留用
+    return await get_dnslog_recode_by_default(domain)
 
 
 async def get_dnslog_recode_by_default(domain=None):
@@ -111,8 +108,9 @@ async def get_dnslog_recode_by_default(domain=None):
 
     url = conf.platform.dnslog_api_url
     api_key = conf.platform.dnslog_api_key
+    user_agent = conf.basic.user_agent
 
-    headers = {'API-Key': api_key, 'Content-Type': "application/json", }
+    headers = {'API-Key': api_key, 'Content-Type': "application/json", 'User-Agent': user_agent}
     if domain is None:
         domain = conf.platform.dnslog_top_domain
     data = {"domain": domain, "ip": "", "per_page": 10000, "page": 1}
