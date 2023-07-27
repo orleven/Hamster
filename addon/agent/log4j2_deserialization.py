@@ -122,14 +122,6 @@ class Addon(AgentAddon):
                 if await self.prove_log4j(keyword, method, url, test_data, headers):
                     return
 
-            # 单发一个带x-forwarded-for的随机header
-            if "X-Forwarded-For" not in headers.keys():
-                async for payload, keyword in self.generate_payload():
-                    temp_headers = deepcopy(headers)
-                    temp_headers["X-Forwarded-For"] = payload
-                    if await self.prove_log4j(keyword, method, url, data, temp_headers):
-                        return
-
             # 补充测试content-type
             if "Content-Type" not in headers.keys():
                 async for payload, keyword in self.generate_payload():

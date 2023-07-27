@@ -35,21 +35,36 @@ class Addon(AgentAddon):
             "sso", "function", "this", "that", "define", "storage", "instruction", "__",
             "true", "false", "text", "hidden", "null", "before", "code", "input", "async", 'change',
             "pend", "this", "hide", "after", "new", "object", "string", "hover", "reset", "return", "void", "escape",
-            "crypt", "8192", "digit", "alidate"
+            "crypt", "8192", "digit", "alidate", "web"
         ]
         self.black_token_list = [
-            "sso", "function", "this", "that", "define", "storage", "instruction",
-            "true", "false", "text", "hidden", "null", "before", "code", "input", "async", 'change',
-            "pend", "this", "hide", "after", "new", "object", "string", "hover", "reset", "return", "void", "escape",
-            "crypt", "8192", "digit", "alidate"
+            "sso", "function", "this", "that", "define", "storage", "instruction", "true", "false", "text", "hidden",
+            "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object", "string",
+            "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "oken", "onfig", "get",
+            "able", "uto", "ini", "ttrs", "dis", "add", "set", "tion", "ate", "key", "remove", "del", "hand", "load",
+            "upd", "rend",
+        ]
+        self.black_url_list = [
+            '.css', '.gif', '.jpg', '.png', '.ico', '.js', '.jpeg', '.gif', '.woff', '.ttf', 'github.com', "dcode.io",
+            "github.com", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth", "index"
+        ]
+        self.black_key_list = [
+            "sso", "function", "this", "that", "define", "storage", "instruction", "true", "false", "text", "hidden",
+            "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object", "string",
+            "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "oken", "onfig", "get",
+            "able", "uto", "ini", "ttrs", "dis", "add", "set", "tion", "ate", "key", "remove", "del", "hand", "load",
+            "upd", "rend",
         ]
         self.regex_map = {
             # "mail": r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]+)",
             # "host": r"([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}[:[0-9]{0,5}]{0,1})",
             # "ip": r"((?:(?:2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(?:2[0-4]\d|25[0-5]|[01]?\d\d?))",
+            "ak": r"ak\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
+            "sk": r"sk\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
+            "url": r"((?:\/[0-9a-zA-Z\_\-\.]{1,32})+\?[0-9a-zA-Z\_\-]{1,32}=[0-9a-zA-Z%\+\=\/\-\_\.]{0,300}(?:\&[0-9a-zA-Z\_\-]{1,32}=*(?:[0-9a-zA-Z%\+\=\/\-\_\.]{0,300})+)*)",
             "password": r"password\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([a-zA-Z0-9\!\@\#\$\^]{3,32})\\?\"?'?",
             "pwd": r"pwd\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([a-zA-Z0-9\!\@\#\$\^]{3,32})\"?'?",
-            # "key": r"key\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{8,300})\\?\"?'?",
+            "key": r"key\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{8,300})\\?\"?'?",
             "ticket": r"ticket\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{8,300})\\?\"?'?",
             "token": r"token\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{8,300})\\?\"?'?",
             "accessId": r"accessId\\?'?\"?[\t\n\r ]*[\:\=][\t\n\r ]*\\?\"?'?([0-9a-zA-Z%\+\=\/\-\_]{16,64})\\?\"?'?",
@@ -68,6 +83,18 @@ class Addon(AgentAddon):
             return False
         for black_tolen in self.black_token_list:
             if black_tolen in token.lower():
+                return False
+        return True
+
+    def is_url(self, url):
+        for black_url in self.black_url_list:
+            if black_url in url.lower():
+                return False
+        return True
+
+    def is_key(self, key):
+        for black_key in self.black_key_list:
+            if black_key in key.lower():
                 return False
         return True
 
@@ -106,6 +133,10 @@ class Addon(AgentAddon):
                             continue
                         if (key == "ticket" and not self.is_token(res[i])):
                             continue
+                        if (key == "url" and not self.is_url(res[i])):
+                            continue
+                        if (key == "key" and not self.is_key(res[i])):
+                            continue
                         if res[i] not in info_list[key]:
                             info_list[key].append(res[i])
         return info_list
@@ -122,7 +153,7 @@ class Addon(AgentAddon):
             detail = ''
             for key in self.regex_map:
                 if key in info_list.keys() and len(info_list[key]) >= 1:
-                    detail += "Found {key}: {value}; \r\n".format(key=key, value=', '.join(info_list[key]))
+                    detail += "Found {key}: \r\n{value}; \r\n\r\n".format(key=key, value='\r\n'.join(info_list[key]))
 
             if detail != '':
                 detail = detail

@@ -11,6 +11,8 @@ import traceback
 import aiohttp
 from lib.core.env import *
 from yarl import URL
+from yarl._quoting_py import _Quoter
+from yarl._quoting_py import UNRESERVED
 from copy import deepcopy
 from typing import Any
 from typing import Union
@@ -410,3 +412,5 @@ class WSRequestContextManager(_WSRequestContextManager):
         if self._resp is not None:
             await self._resp.close()
 
+# 修复 aithttp 默认解码的问题
+URL._PATH_REQUOTER = _Quoter(safe="@:", protected=UNRESERVED + "/+")
