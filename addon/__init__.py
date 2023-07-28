@@ -1856,7 +1856,7 @@ class BaseAddon(object):
     #     }
     #     await self.save_cache(keyword, packet)
 
-    async def save_vul(self, packet, detail=None):
+    async def save_vul(self, packet, detail=None, truncation=True):
         """
         保存漏洞
         :param packet: 数据包， Flow或Response
@@ -1866,7 +1866,10 @@ class BaseAddon(object):
 
         vul = await self.parser_packet(packet)
         if vul:
-            vul["detail"] = detail[:1024] if detail else None
+            if truncation and detail:
+                vul["detail"] = detail[:1024]
+            else:
+                vul["detail"] = detail
             vul["md5"] = md5('|'.join([vul.get('method'), vul.get('url'), self.addon_path]))
             vul["addon_path"] = self.addon_path
             await self.put_queue(vul, vul_queue)

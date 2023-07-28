@@ -45,18 +45,18 @@ class Addon(AgentAddon):
             "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object", "string",
             "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "oken", "onfig", "get",
             "able", "uto", "ini", "ttrs", "dis", "add", "set", "tion", "ate", "key", "remove", "del", "hand", "load",
-            "upd", "rend",
+            "upd", "rend", "age", "ent", "md5", "index"
         ]
         self.black_url_list = [
             '.css', '.gif', '.jpg', '.png', '.ico', '.js', '.jpeg', '.gif', '.woff', '.ttf', 'github.com', "dcode.io",
-            "github.com", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth", "index"
+            "github.com", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth"
         ]
         self.black_key_list = [
             "sso", "function", "this", "that", "define", "storage", "instruction", "true", "false", "text", "hidden",
             "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object", "string",
             "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "oken", "onfig", "get",
             "able", "uto", "ini", "ttrs", "dis", "add", "set", "tion", "ate", "key", "remove", "del", "hand", "load",
-            "upd", "rend",
+            "upd", "rend", "age", "ent", "md5", "index"
         ]
         self.regex_map = {
             # "mail": r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]+)",
@@ -79,7 +79,7 @@ class Addon(AgentAddon):
             "jdbc": r"jdbc\:\S{2,10}\://\S[0-9a-zA-Z%\+\=\/\-\_\?\:]{16,256}",
             "auth": r"[a-z]{2,8}\://[a-zA-Z0-9_.+-]+\:[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]+",
         }
-        self.regex_body_size_limit = 262144
+        self.regex_body_size_limit = 8388480
 
     def is_token(self, token):
         if token == None or token.strip().rstrip() == '':
@@ -163,4 +163,4 @@ class Addon(AgentAddon):
 
                 if detail != '':
                     detail = detail
-                    await self.save_vul(flow, detail)
+                    await self.save_vul(flow, detail, truncation=False)
