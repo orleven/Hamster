@@ -236,7 +236,7 @@ class BaseAddon(object):
             return False
 
         headers = self.get_request_headers(flow)
-        if headers.get('User-Agent', "") == conf.basic.user_agent:
+        if headers.get('User-Agent', "") == conf.basic.user_agent or headers.get('user-agent', "") == conf.basic.user_agent:
             return False
 
         return True
@@ -395,6 +395,12 @@ class BaseAddon(object):
         #     return flow.request.url[:flow.request.url.index(';')]
         else:
             return url
+
+    @staticmethod
+    def get_http_protocol(flow: HTTPFlow):
+        """获取protocol"""
+
+        return flow.request.http_version
 
     @staticmethod
     def get_base_url(flow: HTTPFlow):
@@ -596,6 +602,11 @@ class BaseAddon(object):
                 for cookie_key, cookie_value in flow.request.cookies.items():
                     cookies[cookie_key] = cookie_value
                 res_headers['Cookie'] = cookies
+            elif key == 'cookie':
+                cookies = {}
+                for cookie_key, cookie_value in flow.request.cookies.items():
+                    cookies[cookie_key] = cookie_value
+                res_headers['cookie'] = cookies
             else:
                 res_headers[key] = value
         if flag:

@@ -36,6 +36,7 @@ class Addon(AgentAddon):
                                    "Accept", "Upgrade-Insecure-Requests", "Sec-Fetch-Site", "Sec-Fetch-Mode",
                                    "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match",
                                    "X-Requested-With", "Cache-Control", "content-encoding", "If-Modified-Since"]
+        self.black_headers_list += [item.lower() for item in self.black_headers_list]
 
     async def prove(self, flow: HTTPFlow):
         """agent扫描函数入口"""

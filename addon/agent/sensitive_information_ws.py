@@ -42,18 +42,18 @@ class Addon(AgentAddon):
             "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object", "string",
             "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "oken", "onfig", "get",
             "able", "uto", "ini", "ttrs", "dis", "add", "set", "tion", "ate", "key", "remove", "del", "hand", "load",
-            "upd", "rend", "age", "ent", "md5"
+            "upd", "rend", "age", "ent", "md5", "wind", "ield"
         ]
         self.black_url_list = [
             '.css', '.gif', '.jpg', '.png', '.ico', '.js', '.jpeg', '.gif', '.woff', '.ttf', 'github.com', "dcode.io",
-            "github.com", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth"
+            "github.com", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth", "captcha", "npms.io", "reactjs"
         ]
         self.black_key_list = [
             "sso", "function", "this", "that", "define", "storage", "instruction", "true", "false", "text", "hidden",
             "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object", "string",
             "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "oken", "onfig", "get",
             "able", "uto", "ini", "ttrs", "dis", "add", "set", "tion", "ate", "key", "remove", "del", "hand", "load",
-            "upd", "rend", "age", "ent", "md5"
+            "upd", "rend", "age", "ent", "md5", "wind",  "ield"
         ]
         self.regex_map = {
             # "mail": r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]+)",

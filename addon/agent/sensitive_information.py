@@ -49,7 +49,7 @@ class Addon(AgentAddon):
         ]
         self.black_url_list = [
             '.css', '.gif', '.jpg', '.png', '.ico', '.js', '.jpeg', '.gif', '.woff', '.ttf', 'github.com', "dcode.io",
-            "github.com", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth"
+            "github.com", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth", "captcha", "npms.io", "reactjs"
         ]
         self.black_key_list = [
             "sso", "function", "this", "that", "define", "storage", "instruction", "true", "false", "text", "hidden",

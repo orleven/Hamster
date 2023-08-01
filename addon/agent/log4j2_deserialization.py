@@ -47,6 +47,7 @@ class Addon(AgentAddon):
                                    "Accept", "Upgrade-Insecure-Requests", "Sec-Fetch-Site", "Sec-Fetch-Mode",
                                    "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match", "DNT",
                                    "X-Requested-With", "Cache-Control", "content-encoding", "If-Modified-Since"]
+        self.black_headers_list += [item.lower() for item in self.black_headers_list]
 
     async def generate_payload(self, text=None):
         for payload in self.payloads:
@@ -98,7 +99,8 @@ class Addon(AgentAddon):
                     keyword = res_function_result[1]
                     temp_content, temp_boundary = self.generate_content(temp_parameter_dic)
                     test_cookie[cookie_key] = str(temp_content, encoding='utf-8')
-                    test_headers['Cookie'] = test_cookie
+                    header_cookie_name = 'cookie' if 'cookie' in test_headers else 'Cookie'
+                    test_headers[header_cookie_name] = test_cookie
                     if await self.prove_log4j(keyword, method, url, data, test_headers):
                         return
 

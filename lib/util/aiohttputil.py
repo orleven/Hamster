@@ -154,9 +154,10 @@ class ClientSession(aiohttp.ClientSession):
         # 增加默认ua
         headers = deepcopy(kwargs.get('headers', {}))
 
-        user_agent = headers.get("User-Agent", 'aiohttp')
+        header_user_agent_name = 'user-agent' if 'user-agent' in headers else 'User-Agent'
+        user_agent = headers.get(header_user_agent_name, 'aiohttp')
         if 'aiohttp' in user_agent:
-            headers["User-Agent"] = random_ua()
+            headers[header_user_agent_name] = random_ua()
 
         if not ws_flag:
             # 设置timeout
@@ -164,15 +165,16 @@ class ClientSession(aiohttp.ClientSession):
                 kwargs.setdefault('timeout', conf.basic.timeout)
 
             # 增加X-Forwarded-For等字段
-            if 'API-Key' not in headers.keys():
+            if headers.get(header_user_agent_name, "") != conf.basic.user_agent:
                 for key, value in ip_header().items():
                     if key not in headers.keys():
                         headers[key] = value
 
         # 设置cookie
-        cookie = headers.get("Cookie", None)
+        header_cookie_name = 'cookie' if 'cookie' in headers else 'Cookie'
+        cookie = headers.get(header_cookie_name, None)
         if isinstance(cookie, dict):
-            headers['Cookie'] = '; '.join(['='.join([key, value]) for key, value in cookie.items()])
+            headers[header_cookie_name] = '; '.join(['='.join([key, value]) for key, value in cookie.items()])
 
         # 设置headers
         kwargs['headers'] = headers

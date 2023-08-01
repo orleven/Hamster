@@ -171,8 +171,9 @@ class Addon(AgentAddon):
                                'map', 'json', 'txt', 'php', 'asp', 'aspx', 'html']
         self.black_headers_list = ["Cookie", "Origin", "Connection", "Accept-Encoding", "Accept-Language",
                                    "Accept", "Upgrade-Insecure-Requests", "Sec-Fetch-Site", "Sec-Fetch-Mode",
-                                   "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match",
+                                   "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match", "Referer", "Referer",
                                    "X-Requested-With", "Cache-Control", "content-encoding", "If-Modified-Since"]
+        self.black_headers_list += [item.lower() for item in self.black_headers_list]
 
     def get_aes_cipher_cookie(self, text, key, mode=AES.MODE_CBC):
         BS = AES.block_size
@@ -201,12 +202,13 @@ class Addon(AgentAddon):
     async def prove_shiro_cookie(self, method, url, data, headers):
         async with ClientSession(self.addon_path) as session:
             temp_headers = deepcopy(headers)
-            temp_cookies = temp_headers.get("Cookie", {})
+            header_cookie_name = 'cookie' if 'cookie' in temp_headers else 'Cookie'
+            temp_cookies = temp_headers.get(header_cookie_name, {})
             if 'rememberMe' in temp_cookies.keys():
                 return True
             else:
                 temp_cookies["rememberMe"] = 'is_shiro_test'
-                temp_headers['Cookie'] = temp_cookies
+                temp_headers[header_cookie_name] = temp_cookies
                 async with session.request(method, url=url, data=data, headers=temp_headers, allow_redirects=False) as res:
                     if res and 'rememberme=deleteme' in res.headers.get("Set-Cookie", "").lower():
                         return True
@@ -219,19 +221,20 @@ class Addon(AgentAddon):
         async with ClientSession(self.addon_path) as session:
             for i in range(0, len(self.keylist)):
                 temp_headers = deepcopy(headers)
-                temp_cookies = temp_headers.get("Cookie", {})
+                header_cookie_name = 'cookie' if 'cookie' in temp_headers else 'Cookie'
+                temp_cookies = temp_headers.get(header_cookie_name, {})
                 rememberme_cookie = self.get_aes_cipher_cookie(self.evil_obj_b64, self.keylist[i], AES.MODE_GCM)
                 temp_cookies["rememberMe"] = rememberme_cookie
-                temp_headers['Cookie'] = temp_cookies
+                temp_headers[header_cookie_name] = temp_cookies
                 async with session.request(method, url=url, data=data, headers=temp_headers, allow_redirects=False) as res:
                     if res and 'rememberme=deleteme' not in res.headers.get("Set-Cookie", "").lower():
                         temp_headers = deepcopy(headers)
-                        temp_cookies = temp_headers.get("Cookie", {})
+                        temp_cookies = temp_headers.get(header_cookie_name, {})
                         rememberme_cookie = self.get_aes_cipher_cookie(self.evil_obj_b64, 'Th15IsN0tExi5TK3yaaaaa==', AES.MODE_GCM)
                         temp_cookies["rememberMe"] = rememberme_cookie
-                        temp_headers['Cookie'] = temp_cookies
+                        temp_headers[header_cookie_name] = temp_cookies
                         async with session.request(method, url=url, data=data, headers=temp_headers, allow_redirects=False) as res:
-                            if res  and 'rememberme=deleteme' in res.headers.get("Set-Cookie", "").lower():
+                            if res and 'rememberme=deleteme' in res.headers.get("Set-Cookie", "").lower():
                                 detail = f"Found shiro key: {self.keylist[i]}, mode: {mode_name}"
                                 await self.save_vul(res, detail)
                                 return True
