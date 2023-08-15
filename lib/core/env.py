@@ -45,7 +45,7 @@ ENV_CONFIG_PATH = os.path.join(ROOT_PATH, CONFIG)
 
 # 运行环境
 ENV_CONFIG_FILE_PATH = os.path.join(ENV_CONFIG_PATH, f"{PROJECT_NAME.lower()}_env.conf")
-config_file_list = [(ENV_CONFIG_FILE_PATH, {("env", f"This is a env config for {PROJECT_NAME}"): {("env", "Run env"): "dev"}})]
+config_file_list = [(ENV_CONFIG_FILE_PATH, {("env", f"This is a env config for {PROJECT_NAME}"): {("env", "Run env"): "online"}})]
 env_conf = parser_conf(config_file_list)
 ENV = env_conf.env.env.lower()
 

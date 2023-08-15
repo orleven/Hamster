@@ -4,7 +4,6 @@
 
 import asyncio
 
-
 class WorkItem:
     def __init__(self, func, *args, **kwargs):
         self.func = func
@@ -12,12 +11,14 @@ class WorkItem:
         self.kwargs = kwargs
         self.future = asyncio.Future()
 
-
 class AsyncWorker:
     def __init__(self, pool):
         self.pool = pool
         self.fut = None
         self.is_running = False
+        self.func = None
+        self.args = None
+        self.kwargs = None
 
     def start(self):
         self.fut = asyncio.ensure_future(self.run())
@@ -32,6 +33,9 @@ class AsyncWorker:
                 break
             try:
                 self.is_running = True
+                self.func = item.func
+                self.args = item.args
+                self.kwargs = item.kwargs
                 result = await item.func(*item.args, **item.kwargs)
                 item.future.set_result(result)
             except Exception as ex:

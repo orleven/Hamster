@@ -44,7 +44,7 @@ class Addon(AgentAddon):
         self.black_media_type_list = ["image", "video", "audio"]
         self.black_ext_list = ['jpg', 'png', 'pdf', 'png', 'docx', 'doc', 'jpeg', 'xlsx', 'csv', 'js', 'css',  'map', 'json', 'txt']
         self.black_headers_list = ["Cookie", "Origin", "Connection", "Accept-Encoding", "Accept-Language",
-                                   "Accept", "Upgrade-Insecure-Requests", "Sec-Fetch-Site", "Sec-Fetch-Mode",
+                                   "Upgrade-Insecure-Requests", "Sec-Fetch-Site", "Sec-Fetch-Mode",
                                    "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match", "DNT",
                                    "X-Requested-With", "Cache-Control", "content-encoding", "If-Modified-Since"]
         self.black_headers_list += [item.lower() for item in self.black_headers_list]

@@ -21,6 +21,7 @@ class AgentAddon(BaseAddon):
 
     async def handle_response(self, flow):
         """处理response函数"""
+
         async for flow_hash, flow_addon_list, flow_addon_type, flow in handle_flow(flow, self.__hash_list, [self.name]):
             if flow_addon_list is None or (flow_addon_list and self.name in flow_addon_list):
                 if self.addon_type == flow_addon_type:
@@ -33,6 +34,7 @@ class AgentAddon(BaseAddon):
         :param flow:
         :return:
         """
+
         if self.is_scan_response(flow):
             asyncio.get_event_loop().create_task(self.handle_response(flow))
         else:

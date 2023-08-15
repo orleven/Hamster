@@ -23,5 +23,5 @@ services:
       - 15672:15672
     environment:
       - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_DEFAULT_PASS=123456
     container_name: hamster_rabbitmq

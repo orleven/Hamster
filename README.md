@@ -23,7 +23,12 @@ Hamster是基于mitmproxy开发的异步被动扫描框架，基于http代理进
 2. 扫描的poc发送到supprt进行签名、waf绕过等
 
 ## supprt
-1. 给agent进行签名、waf绕过等。
+1. 代理端口。
+2. 给agent进行签名、waf绕过等。
+3. 手工测试时进行签名、waf绕过。
+
+## manager
+1. 管理控制台
 
 # 安装
 
@@ -39,8 +44,8 @@ pip install -r requirements.txt
 # 如没有conf文件夹，则需要先生成配置文件，先运行一次init.py，生成相关配置文件（默认是dev环境）
 python init.py
 
-# 通过修改 conf/dev/*.conf 配置mysql,redis,rabbitmq,dnslog等
-vim conf/dev/*.conf 
+# 通过修改 conf/online/*.conf 配置mysql,redis,rabbitmq,dnslog等
+vim conf/online/*.conf 
 
 # 再一次运行，初始化数据库。
 python init.py
@@ -48,10 +53,10 @@ python init.py
 
 # 配置
 
-为了覆盖延迟型的SSRF、Log4j2等漏洞，对于此类数据包进行了缓存，因此此类漏洞的扫描也需要配合[DNSLog](https://github.com/orleven/Celestion) 。
+因为有不少漏洞需要配合DNSLOG，因此需要配置dnslog，本项目内置[DNSLog](https://github.com/orleven/Celestion)api接口，当然也可以使用其他dnslog，不过需要编写接口，相关代码在`/lib/core/api.py`中的`get_dnslog_recode`函数 。
 
 1. 建议先配置[DNSLog](https://github.com/orleven/Celestion) ，并从[DNSLog](https://github.com/orleven/Celestion) 项目中获取到API-Key等信息。
-2. 通过修改 `conf/dev/hamster_basic.conf` (第一次运行后生成) 配置mysql,redis,rabbitmq,dnslog，具体请看注释。 
+2. 通过修改 `conf/online/hamster_basic.conf` (第一次运行后生成) 配置mysql,redis,rabbitmq,dnslog，具体请看注释。 
 
 # 运行
 
@@ -75,26 +80,36 @@ python agent.py
 source venv/bin/activate
 python support.py
 ```
+4. 运行manager（可选）
 
-4. 设置浏览器HTTP代理或者设置burpsuite二级代理`upstream proxy servers`, 代理认证请配置 `conf/hamster.conf`.
+```
+source venv/bin/activate
+python manager.py
+```
+
+5. 设置浏览器HTTP代理或者设置burpsuite二级代理`upstream proxy servers`, 代理认证请配置 `conf/online/hamster_basic.conf`.
 
 ![burpsuite_proxy](show/burpsuite_proxy.png)
 
 * host: localhost
 * port: 8000
 * authtype: basic
-* username: hamster
+* username: Hamster
 * password: Hamster@123 
 
-5. 然后浏览器访问目标网站就可以进行漏洞扫描了。
+6. 然后浏览器访问目标网站就可以进行漏洞扫描了。
 
-6. 也可以查看访问控制台`http://admin.hamster.com/hamster/`查看扫描结果
+7. 也可以随时通过访问控制台查看扫描结果（控制台有如下两种访问方式）
+
+   1. 通过server代理访问，http://admin.hamster.com/hamster/online/login
+   2. 通过manager直接访问，http://127.0.0.1:8002/hamster/online/login
+
+访问凭据：
+
+* username: admin
+* password: Hamster@123
 
 ![web](show/web.png)
-
-* url: http://admin.hamster.com/hamster/
-* username: admin
-* password: hamster@123 
 
 # 插件编写
 
@@ -111,7 +126,8 @@ PS: 参考插件模版目录`test_addon`即可。
 
 # 关于缓存日志查询
 
-日志保存天数，默认3天，数据库缓存默认1天。
+为了覆盖延迟型的SSRF、Log4j2等漏洞，对于此类数据包进行了缓存，缓存日志保存天数，默认2天，数据库缓存默认1天。
+
 1. 如果dnslog告警了，请等待2分钟后，在漏洞中查看。
 2. 如果短时间内触发多个dnslog，且漏洞仅更新了1个的话，这是因为这几个dnslog的触发原因是一样的，漏洞已做了去重处理，忽略就行。
 3. 如果dnslog告警，且漏洞没有更新，表示这个漏洞是延迟触发的，且超过了数据库缓存天数，可以尝试在logs目录中查找，如果还是没找到，那就是说明延迟太久了，缓存已经没了。

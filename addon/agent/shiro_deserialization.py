@@ -171,7 +171,7 @@ class Addon(AgentAddon):
                                'map', 'json', 'txt', 'php', 'asp', 'aspx', 'html']
         self.black_headers_list = ["Cookie", "Origin", "Connection", "Accept-Encoding", "Accept-Language",
                                    "Accept", "Upgrade-Insecure-Requests", "Sec-Fetch-Site", "Sec-Fetch-Mode",
-                                   "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match", "Referer", "Referer",
+                                   "Sec-Fetch-Dest", "Sec-Fetch-User", "If-None-Match", "Referer",
                                    "X-Requested-With", "Cache-Control", "content-encoding", "If-Modified-Since"]
         self.black_headers_list += [item.lower() for item in self.black_headers_list]
 

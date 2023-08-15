@@ -221,7 +221,7 @@ class BaseEngine(object):
 
         if conf.scan.scan_mode == ScanMode.CACHE:
             log.info("Starting cache center... ")
-            cache_laster = dnslog_laster = get_time(0)
+            cache_laster = dnslog_laster = get_time()
             while True:
                 # 同步dnslog的漏洞
                 temp = get_time(get_timestamp() - conf.platform.dnslog_async_time)
@@ -266,7 +266,7 @@ class BaseEngine(object):
         """注册引擎、心跳"""
 
         log.info("Starting heartbeat... ")
-        laster = get_time(0)
+        laster = get_time(get_timestamp() - conf.basic.heartbeat_time * 2)
         while True:
             temp = get_time(get_timestamp() - conf.basic.heartbeat_time)
             if temp > laster:

@@ -51,7 +51,7 @@ def basic_config():
             ("host", ""): "127.0.0.1",
             ("port", ""): 5672,
             ("username", ""): "admin",
-            ("password", ""): "admin",
+            ("password", ""): "123456",
             ("name", ""): PROJECT_NAME,
         },
         ("scan", f"This is a scan config for {PROJECT_NAME}"): {
