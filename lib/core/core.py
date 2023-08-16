@@ -79,6 +79,7 @@ def handle_options(args):
     conf.scan.dict_password = []
     conf.scan.vul_filter = []
 
+
     # debug 模式
     conf.basic.debug = args.debug
     conf.basic.ssl_insecure = True

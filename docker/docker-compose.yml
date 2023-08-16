@@ -1,0 +1,65 @@
+version: '3'
+services:
+  hamster_mysql:
+    restart: always
+    image: mysql:latest
+    hostname: hamster_mysql
+    ports:
+      - 127.0.0.1:3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    container_name: hamster_mysql
+    networks:
+      - hamster_network
+  hamster_redis:
+    restart: always
+    image: redis:latest
+    hostname: hamster_redis
+    ports:
+      - 127.0.0.1:6379:6379
+    command: redis-server --requirepass 123456
+    container_name: hamster_redis
+    environment:
+      - LANG=en_US.UTF-8
+      - TZ=Asia/Shanghai
+    networks:
+      - hamster_network
+  hamster_rabbitmq:
+    restart: always
+    image: rabbitmq:management
+    hostname: hamster_rabbitmq
+    ports:
+      - 127.0.0.1:5672:5672
+      - 127.0.0.1:15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=123456
+      - LANG=en_US.UTF-8
+      - TZ=Asia/Shanghai
+    container_name: hamster_rabbitmq
+    networks:
+      - hamster_network
+  hamster_scan:
+      restart: unless-stopped
+      build:
+        context: ../
+        dockerfile: docker/Dockerfile
+      hostname: hamster_scan
+      ports:
+        - 8000:8000
+        - 8001:8001
+        - 8002:8002
+      container_name: hamster_scan
+      depends_on:
+        - hamster_mysql
+        - hamster_redis
+        - hamster_rabbitmq
+      networks:
+        - hamster_network
+      environment:
+          - LANG=en_US.UTF-8
+          - TZ=Asia/Shanghai
+
+networks:
+  hamster_network:
+

@@ -41,11 +41,12 @@ class SimpleMaster(BaseMaster):
         # 加载测试配置
         self.addons.add(asgiapp.WSGIApp(app, conf.basic.listen_domain, 80))
 
+
     def hook(self):
         """运行相关伴随线程"""
 
-        # 加载配置
-        self.configure_addons()
+        # dnslog
+        asyncio.ensure_future(self.init_dnslog())
 
         # 启动心跳
         asyncio.ensure_future(self.heartbeat())
@@ -58,6 +59,8 @@ class SimpleMaster(BaseMaster):
 
         # 任务处理
         asyncio.ensure_future(self.task_center())
+
+
 
     def print_status(self):
         """打印状态"""

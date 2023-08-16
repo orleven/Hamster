@@ -2,6 +2,7 @@
 .idea
 .git
 .DS_Store
+.gitignore
 
 # python project
 *.pyc

@@ -75,7 +75,6 @@ class BaseAddon(object):
         # self.is_save_response_body = conf.cache.is_save_response_body
         self.save_body_size_limit = conf.cache.save_body_size_limit
         self.dnslog_top_domain = conf.platform.dnslog_top_domain
-
         self.__basic_info()
 
         self.log = log
@@ -297,7 +296,7 @@ class BaseAddon(object):
         if host == self.listen_domain:
             return True
 
-        if self.dnslog_top_domain in host:
+        if conf.platform.dnslog_top_domain != '' and conf.platform.dnslog_top_domain in host:
             return True
 
         if scan_list:
@@ -1813,8 +1812,9 @@ class BaseAddon(object):
             packet_dic["websocket_content"] = websocket_content[:conf.scan.save_body_size_limit] if websocket_content else None
             packet_dic["update_time"] = get_time()
 
-
             return packet_dic
+        except TimeoutError:
+            pass
         except Exception as e:
             msg = str(e)
             traceback.print_exc()

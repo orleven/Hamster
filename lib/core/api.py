@@ -12,6 +12,7 @@ from lib.core.data import query_dnslog_by_keyword
 from lib.util.util import get_timestamp
 from lib.util.util import get_time
 from lib.util.util import get_time_by_str
+from lib.core.g import interactsh_client
 from lib.util.aiohttputil import ClientSession
 
 
@@ -99,11 +100,37 @@ async def get_addons_file_info(addon_path, id=""):
 
 async def get_dnslog_recode(domain=None):
 
-    # dnslog_api_func = conf.platform.dnslog_api_func 后续添加功能留用
-    return await get_dnslog_recode_by_default(domain)
-
+    dnslog_api_func = conf.platform.dnslog_api_func
+    if dnslog_api_func == 'celestion':
+        return await get_dnslog_recode_by_celestion(domain)
+    else:
+        return await get_dnslog_recode_by_default(domain)
 
 async def get_dnslog_recode_by_default(domain=None):
+    dnslog_list = []
+    if domain is None:
+        recode_list = await interactsh_client.poll()
+        for recode in recode_list:
+            recode_domain = recode.get("full-id", None)
+            if recode_domain:
+                recode_domain += '.' + interactsh_client.server
+            recode_ip = recode.get("remote-address", None)
+
+            time_str = recode.get("timestamp", "2023-08-16T13:40:19.412962501Z")
+            if '.' in time_str:
+                time_str = time_str.split('.')[0]
+            recode_time = get_time_by_str(time_str, fmt="%Y-%m-%dT%H:%M:%S")
+            old_time = get_time(get_timestamp() - 36 * 60 * 60)
+            if recode_time > old_time and len(recode_domain) > 16 + len(conf.platform.dnslog_top_domain):
+                dnslog = await query_dnslog_by_keyword(recode_domain)
+                if dnslog is None:
+                    dnslog = dict(keyword=recode_domain, ip=recode_ip, create_time=recode_time, update_time=get_time())
+                    if await inject_dnslog(dnslog):
+                        dnslog_list.append(dnslog)
+    return dnslog_list
+
+
+async def get_dnslog_recode_by_celestion(domain=None):
     """请求dnslog recode"""
 
     url = conf.platform.dnslog_api_url

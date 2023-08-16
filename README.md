@@ -32,10 +32,9 @@ Hamster是基于mitmproxy开发的异步被动扫描框架，基于http代理进
 
 # 安装
 
-```
-# 通过dockerfile文件部署 mysql,redis,rabbitmq 
-docker-compose up -d
+## 代码部署
 
+```
 # PIP安装依赖
 python3.9 -m venv venv
 source venv/bin/activate
@@ -44,50 +43,44 @@ pip install -r requirements.txt
 # 如没有conf文件夹，则需要先生成配置文件，先运行一次init.py，生成相关配置文件（默认是dev环境）
 python init.py
 
-# 通过修改 conf/online/*.conf 配置mysql,redis,rabbitmq,dnslog等
+# 通过修改 conf/online/*.conf 配置mysql,redis,rabbitmq,dnslog等, 可查看配置说明
 vim conf/online/*.conf 
 
 # 再一次运行，初始化数据库。
 python init.py
+
+# 运行server
+nohup python server.py &
+
+# 运行agent
+nohup python agent.py  &
+
+# 运行support
+nohup python support.py &
+
+# 运行manager（可选）
+nohup python manager.py  &
 ```
 
-# 配置
-
-因为有不少漏洞需要配合DNSLOG，因此需要配置dnslog，本项目内置[DNSLog](https://github.com/orleven/Celestion)api接口，当然也可以使用其他dnslog，不过需要编写接口，相关代码在`/lib/core/api.py`中的`get_dnslog_recode`函数 。
-
-1. 建议先配置[DNSLog](https://github.com/orleven/Celestion) ，并从[DNSLog](https://github.com/orleven/Celestion) 项目中获取到API-Key等信息。
-2. 通过修改 `conf/online/hamster_basic.conf` (第一次运行后生成) 配置mysql,redis,rabbitmq,dnslog，具体请看注释。 
-
-# 运行
-
-1. 运行server
+## Docker部署
 
 ```
-source venv/bin/activate
-python server.py
+# 通过dockerfile文件部署 mysql,redis,rabbitmq 
+cd docker
+
+# 通过修改 conf/online/*.conf 配置dnslog等, 可查看配置说明
+vim conf/online/*.conf 
+
+# 开始部署docker
+docker-compose up -d
 ```
 
-2. 运行agent
 
-```
-source venv/bin/activate
-python agent.py
-```
+# 使用
 
-3. 运行support
+## 设置代理
 
-```
-source venv/bin/activate
-python support.py
-```
-4. 运行manager（可选）
-
-```
-source venv/bin/activate
-python manager.py
-```
-
-5. 设置浏览器HTTP代理或者设置burpsuite二级代理`upstream proxy servers`, 代理认证请配置 `conf/online/hamster_basic.conf`.
+设置浏览器HTTP代理或者设置burpsuite二级代理`upstream proxy servers`, 代理认证请配置 `conf/online/hamster_basic.conf`.
 
 ![burpsuite_proxy](show/burpsuite_proxy.png)
 
@@ -97,9 +90,13 @@ python manager.py
 * username: Hamster
 * password: Hamster@123 
 
-6. 然后浏览器访问目标网站就可以进行漏洞扫描了。
+## 扫描
 
-7. 也可以随时通过访问控制台查看扫描结果（控制台有如下两种访问方式）
+然后浏览器访问目标网站就可以进行漏洞扫描了。
+
+## 查看扫描结果 
+
+可以随时通过访问控制台查看扫描结果（控制台有如下两种访问方式）
 
    1. 通过server代理访问，http://admin.hamster.com/hamster/online/login
    2. 通过manager直接访问，http://127.0.0.1:8002/hamster/online/login
@@ -110,6 +107,13 @@ python manager.py
 * password: Hamster@123
 
 ![web](show/web.png)
+
+# 配置说明
+
+因为有不少漏洞需要配合DNSLOG，因此需要配置dnslog，本项目默认使用`oast.pro, oast.live, oast.site, oast.online, oast.fun, oast.me`项目接口，同时内置[DNSLog](https://github.com/orleven/Celestion)api接口，当然也可以使用其他dnslog，不过需要编写接口，相关代码在`/lib/core/api.py`中的`get_dnslog_recode`函数。
+
+1. 通过修改 `conf/online/hamster_basic.conf` (第一次运行后生成) 配置mysql,redis,rabbitmq,dnslog，具体请看注释。 
+
 
 # 插件编写
 

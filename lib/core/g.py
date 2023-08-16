@@ -13,7 +13,6 @@ from lib.core.mysql import Mysql
 from lib.core.rabbitmq import RabbitMQ
 from lib.core.redis import Redis
 
-
 # 配置存储
 conf = config_parser()
 
@@ -95,3 +94,6 @@ mysql = Mysql(
 async_sqlalchemy_database_url = mysql.get_async_sqlalchemy_database_url()
 async_engine = create_async_engine(async_sqlalchemy_database_url)
 async_session = sessionmaker(async_engine, class_=AsyncSession)
+
+from lib.util.interactshutil import Interactsh
+interactsh_client = Interactsh()

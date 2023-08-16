@@ -105,6 +105,7 @@ class BaseMaster(BaseEngine, Master):
                 self.addons.add(addon)
             self.addon_list = addon_list
 
+
     def hook(self):
         """运行相关伴随线程"""
 

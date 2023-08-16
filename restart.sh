@@ -11,12 +11,12 @@ ps aux | grep "python support.py" | awk '{print $2}' | xargs kill -9
 nohup python support.py >> log/nohup_support.out  &
 echo "restarted support!"
 
-ps aux | grep "python agent.py" | awk '{print $2}' | xargs kill -9
-nohup python agent.py >> log/nohup_agent.out  &
-echo "restarted agent!"
-
 ps aux | grep "python server.py"| awk '{print $2}' | xargs kill -9
 nohup python server.py >> log/nohup_server.out  &
 echo "restarted server!"
+
+ps aux | grep "python agent.py" | awk '{print $2}' | xargs kill -9
+nohup python agent.py >> log/nohup_agent.out  &
+echo "restarted agent!"
 
 echo "restarted process!"

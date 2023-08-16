@@ -3,13 +3,12 @@
 # @author: orleven
 
 import traceback
-
-
 from lib.core.env import *
 import os
 import asyncio
 from copy import deepcopy
 from lib.core.g import conf
+from lib.core.g import interactsh_client
 from lib.core.g import log
 from lib.core.g import redis
 from lib.core.g import rabbitmq
@@ -262,11 +261,20 @@ class BaseEngine(object):
             traceback.print_exc()
             log.error(f"Error async dnslog recode, error: {msg}")
 
+    async def init_dnslog(self):
+        # 初始化dnslog
+        log.info("Starting init_dnslog... ")
+        if conf.platform.dnslog_api_func == 'default':
+            custom_server = conf.platform.dnslog_api_url
+            token = conf.platform.dnslog_api_key
+            interactsh_client.config(custom_server, token)
+            conf.platform.dnslog_top_domain = await interactsh_client.register()
+
     async def heartbeat(self):
         """注册引擎、心跳"""
 
         log.info("Starting heartbeat... ")
-        laster = get_time(get_timestamp() - conf.basic.heartbeat_time * 2)
+        laster = get_time(get_timestamp() - conf.basic.heartbeat_time + 20)
         while True:
             temp = get_time(get_timestamp() - conf.basic.heartbeat_time)
             if temp > laster:
@@ -290,6 +298,7 @@ class BaseEngine(object):
                     conf.scan.dict_username = await query_dict_username_list()
                     conf.scan.dict_password = await query_dict_password_list()
                     conf.scan.vul_fillter = await query_vul_filter_list()
+
 
                     if MAIN_NAME != 'simple':
                         # 检查redis状态

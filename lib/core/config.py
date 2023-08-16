@@ -75,11 +75,11 @@ def basic_config():
             ("cache_deal_time", ""): 3600,
         },
         ("platform", f"This is a platform config for {PROJECT_NAME}"): {
-            ("dnslog_top_domain", ""): "dnslog.com",
-            ("dnslog_api_url", ""): "https://api.dnslog.com/dnslog/list",
-            ("dnslog_api_key", ""): "xxxxxxxxxxxxxxxxxxxx",
-            ("dnslog_async_time", ""): 60,
-            ("dnslog_api_func", "you should nano func in lib/core/api.py"): "default",
+            ("dnslog_top_domain", ""): "",
+            ("dnslog_api_url", ""): "",
+            ("dnslog_api_key", ""): "",
+            ("dnslog_async_time", ""): 20,
+            ("dnslog_api_func", "Dnslog api function, default/celestion, and you should nano func in lib/core/api.py"): "default",
         }
     }
     return configs

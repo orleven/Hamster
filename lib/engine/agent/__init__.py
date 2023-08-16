@@ -5,6 +5,7 @@
 from lib.core.env import *
 import asyncio
 from lib.core.g import log
+from lib.core.g import interactsh_client
 from lib.core.g import conf
 from lib.core.g import redis
 from lib.core.g import rabbitmq
@@ -114,6 +115,7 @@ class BaseAgent(BaseEngine):
         await redis.connect()
 
         async with PoolCollector.create(num_workers=self.num_workers) as manager:
+            asyncio.ensure_future(self.init_dnslog())
             asyncio.ensure_future(self.submit_task(manager))
             asyncio.ensure_future(self.listen_task())
             asyncio.ensure_future(self.data_center())
