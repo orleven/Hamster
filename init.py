@@ -117,6 +117,13 @@ async def init_black_list():
         {"match_position": ScanMatchPosition.URL, "value": '^(http|https)://172\..*',  "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.URL, "value": '^(http|https)://192\..*', "match_type": ScanMatchType.REGEX},
         {"match_position": ScanMatchPosition.HOST, "value": conf.platform.dnslog_top_domain, "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.HOST, "value": "oast.fun","match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.HOST, "value": "oast.site", "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.HOST, "value": "oast.online", "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.HOST, "value": "oast.live", "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.HOST, "value": "oast.pro", "match_type": ScanMatchType.IN},
+        {"match_position": ScanMatchPosition.HOST, "value": "oast.me", "match_type": ScanMatchType.IN},
+
     ]
     async with async_session.begin() as session:
         for black in black_list:
@@ -124,8 +131,9 @@ async def init_black_list():
             value = black["value"]
             match_type = black["match_type"]
             update_time = get_time()
-            black = ScanBlack(match_position=match_position, value=value, match_type=match_type,  update_time=update_time)
-            session.add(black)
+            if value != '':
+                black = ScanBlack(match_position=match_position, value=value, match_type=match_type,  update_time=update_time)
+                session.add(black)
         await session.commit()
 
 
@@ -144,8 +152,9 @@ async def init_white_list():
             value = white["value"]
             match_type = white["match_type"]
             update_time = get_time()
-            white = ScanWhite(match_position=match_position, value=value, match_type=match_type, update_time=update_time)
-            session.add(white)
+            if value != '':
+                white = ScanWhite(match_position=match_position, value=value, match_type=match_type, update_time=update_time)
+                session.add(white)
         await session.commit()
 
 
