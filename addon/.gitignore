@@ -6,3 +6,5 @@
 # python project
 *.pyc
 __pycache__
+
+bak/
