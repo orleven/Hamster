@@ -11,7 +11,7 @@ __pycache__
 # hamster project
 venv/
 log/
-
+conf/
 dev/
 tool/
 addon/
