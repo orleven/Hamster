@@ -493,7 +493,7 @@ class BaseAddon(object):
     def set_request_body(flow: HTTPFlow, body: str):
         """获取request body"""
 
-        flow.request.body = body
+        flow.request.content = body.encode('utf-8')
         return flow
 
     @staticmethod

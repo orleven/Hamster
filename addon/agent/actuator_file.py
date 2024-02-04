@@ -35,12 +35,16 @@ class Addon(AgentAddon):
             ";/actuator/",
             "api/actuator/",
             "api/;/actuator/",
+            "v3/",
             "v2/",
             "v1/",
             "web/",
             "swagger/",
             "gateway/actuator/",
-            "..;/"
+            "..;/",
+            "..;/v1/",
+            "..;/v2/",
+            "..;/actuator/",
             "%61%63%74uator/",
             "api/%61%63%74uator/",
         ]
@@ -54,7 +58,7 @@ class Addon(AgentAddon):
             "env": "spring",
             "routes": "\"route_",
             "mappings": "springframework",
-            "loggers": "\"configuredLevel\":\"INFO\"",
+            "loggers": "\"configuredLevel\":\"info\"",
             "hystrix.stream": "hystrixcommand",
             "auditevents": "\"events\":",
             "httptrace": "\"headers\":{",
@@ -72,6 +76,7 @@ class Addon(AgentAddon):
             "gateway/routes": "\"predicate\":",
             "gateway/globalfilters": "cloud.gateway.filter",
             "gateway/routefilters": "gatewayfilter",
+            "nacos-discovery": "NacosDiscoveryProperties",
         }
 
     async def prove(self, flow: HTTPFlow):
@@ -86,7 +91,8 @@ class Addon(AgentAddon):
                             url = url_no_query + dir_path + file_path
                             async with session.get(url=url, headers=headers, allow_redirects=False) as res:
                                 if res and res.status == 200:
-                                    if "application/json" in res.headers.get("Content-Type", "text/html"):
+                                    content_type = res.headers.get("Content-Type", "text/html")
+                                    if "application/json" in content_type or "actuator" in content_type:
                                         text = await res.text()
                                         if text and file_keyword in text.lower():
                                             detail = text

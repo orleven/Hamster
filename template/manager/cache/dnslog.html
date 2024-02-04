@@ -47,21 +47,58 @@
                         <table id="dnslog_datatable" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
+                                <th><input type="checkbox" class="checkall"/></th>
+                                <th>ID</th>
                                 <th>Keyword</th>
                                 <th>IP</th>
                                 <th>Create</th>
                                 <th>Update</th>
+                                <th>Operation</th
                             </tr>
                             </thead>
                         </table>
                     </div>
                 </div>
                 <br/>
+                <button id="select_delete_button" class="btn btn-danger" type="button">Delete</button>
+                <button id="select_clear_3day_old_button" class="btn btn-danger" type="button">Clear 3Day</button>
+                <button id="select_clear_all_button" class="btn btn-danger" type="button">Clear All</button>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade bs-tables-modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="delete-form" data-parsley-validate class="form-horizontal form-label-left">
+                    <p>Are you sure to delete this data?</p>
+                    <input type="text" id="delete_id" name="delete_id" disabled hidden>
+
+                    <label for="delete_keyword">Keyword:</label>
+                    <input type="text" id="delete_keyword" name="delete_keyword" required="required"
+                           class="form-control">
+
+                    <label for="delete_ip">IP:</label>
+                    <input type="text" id="delete_ip" name="delete_ip" required="required" class="form-control">
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="delete_button" type="button" class="btn btn-danger" data-dismiss="modal">Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block js %}
@@ -119,14 +156,149 @@
                 });
             },
             columns: [
+                {
+                    "data": null, "width": "20px", "defaultContent": "",
+                    "render": function (data, type, full, meta) {
+                        return '<input type="checkbox"  class="checkchild"  value="' + data.id + '" />';
+                    },
+                },
+                {"data": "id", "width": "20px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
                 {"data": "keyword", "width": "200px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
                 {"data": "ip", "width": "100px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
                 {"data": "create_time", "width": "100px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
                 {"data": "update_time", "width": "100px", "defaultContent": "", "render": $.fn.dataTable.render.text()},
+                {
+                    "data": null, "width": "20px", "defaultContent": "" +
+                        "<button id=\"delRow\" type=\"button\" class=\"btn btn-danger btn-table-sm\" data-toggle=\"modal\" data-target=\".bs-tables-modal-delete\"><span> <i class=\"fa fa-remove\"></i></span> </button>"
+                },
             ],
+        });
+        $('#dnslog_datatable tbody').on('click', 'button#delRow', function () {
+            var row = dnslog_datatable.row($(this).parents('tr')).data();
+            $("#delete_id").val(row.id);
+            $("#delete_keyword").val(row.keyword);
+            $("#delete_ip").val(row.ip);
         });
         $("#search_button").click(function () {
             dnslog_datatable.ajax.reload();
+        });
+        $("#select_delete_button").click(function () {
+            var ids = '';
+            $(".checkchild:checked").each(function (k) {
+                if (k == 0) {
+                    ids = $(this).val();
+                } else {
+                    ids += ',' + $(this).val();
+                }
+            });
+            var data = {
+                "ids": ids,
+            };
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('dnslog.delete') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        dnslog_datatable.row().remove().draw(false);//删除这行的数据
+                        $(".checkall").prop("checked", false);
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            })
+        });
+        $("#delete_button").click(function () {
+            var data = {
+                "id": $("#delete_id").val(),
+            };
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('dnslog.delete') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        dnslog_datatable.row().remove().draw(false);//删除这行的数据
+                        // dnslog_datatable.ajax.reload();
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            });
+        });
+        $("#select_clear_all_button").click(function () {
+            var data = {};
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('dnslog.clear_all') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        dnslog_datatable.ajax.reload();
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            })
+        });
+        $("#select_clear_3day_old_button").click(function () {
+            var data = {};
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('dnslog.clear_3day_old') }}",
+                cache: false,  //禁用缓存
+                data: JSON.stringify(data),   //传入已封装的参数
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var arr = "";
+                    if ('object' == typeof data) {
+                        arr = data;
+                    } else {
+                        arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                    }
+                    if (arr.status === 10000) {
+                        dnslog_datatable.ajax.reload();
+                    }
+                },
+                error: function (err) {
+                    window.location.href = "{{ url_for('index.index') }}";
+                }
+            })
+        });
+        $(".checkall").click(function () {
+            var check = $(this).prop("checked");
+            $(".checkchild").prop("checked", check);
         });
     })
 </script>

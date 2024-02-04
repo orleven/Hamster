@@ -234,26 +234,27 @@ def get_data_encode_type(content, encode_type=None):
     if encode_type is None:
         encode_type = []
 
-    if isinstance(content, bytes):
-        try:
-            content = content.decode('utf-8')
-        except:
-            return content, encode_type
+    if content is not None:
+        if isinstance(content, bytes):
+            try:
+                content = content.decode('utf-8')
+            except:
+                return content, encode_type
 
-    # url编码
-    if '=' not in content:
-        content_decode = safe_urldecode(content)
-        if content_decode and content_decode != content:
+        # url编码
+        if '=' not in content:
+            content_decode = safe_urldecode(content)
+            if content_decode and content_decode != content:
+                content = content_decode
+                encode_type.append(EncodeType.URL_ENCODE)
+                content, encode_type = get_data_encode_type(content, encode_type)
+
+        # base64编码
+        content_decode = safe_base64decode(content)
+        if content_decode and content_decode.isprintable():
             content = content_decode
-            encode_type.append(EncodeType.URL_ENCODE)
+            encode_type.append(EncodeType.BASE64_ENCODE)
             content, encode_type = get_data_encode_type(content, encode_type)
-
-    # base64编码
-    content_decode = safe_base64decode(content)
-    if content_decode and content_decode.isprintable():
-        content = content_decode
-        encode_type.append(EncodeType.BASE64_ENCODE)
-        content, encode_type = get_data_encode_type(content, encode_type)
     return content, encode_type
 
 

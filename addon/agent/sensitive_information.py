@@ -34,30 +34,24 @@ class Addon(AgentAddon):
             '.css', '.gif', '.jpg', '.png', '.ico', '.js', '.jpeg', '.gif', '.woff', '.ttf', 'github.com', "dcode.io",
             "github.com", "feross.org"
         ]
-        self.black_password_list = [
-            "sso", "function", "this", "that", "define", "storage", "instruction", "__",
-            "true", "false", "text", "hidden", "null", "before", "code", "input", "async", 'change',
-            "pend", "this", "hide", "after", "new", "object", "string", "hover", "reset", "return", "void", "escape",
-            "crypt", "8192", "digit", "alidate", "web"
-        ]
-        self.black_token_list = [
-            "sso", "function", "this", "that", "define", "storage", "instruction", "true", "false", "text", "hidden",
-            "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object", "string",
-            "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "oken", "onfig", "get",
-            "able", "uto", "ini", "ttrs", "dis", "add", "set", "tion", "ate", "key", "remove", "del", "hand", "load",
-            "upd", "rend", "age", "ent", "md5", "index"
-        ]
         self.black_url_list = [
             '.css', '.gif', '.jpg', '.png', '.ico', '.js', '.jpeg', '.gif', '.woff', '.ttf', 'github.com', "dcode.io",
-            "github.com", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth", "captcha", "npms.io", "reactjs"
+            "github", "feross.org", ".svg", ".font", "sso", "login", "regi", "sign", "auth", "captcha", "npms.io",
+            "reactjs", "/o?", "/t?",
+            "/2?", "/n/o?", "/a?", "chromium", "bugs", "mozilla",
         ]
-        self.black_key_list = [
-            "sso", "function", "this", "that", "define", "storage", "instruction", "true", "false", "text", "hidden",
-            "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object", "string",
-            "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "oken", "onfig", "get",
-            "able", "uto", "ini", "ttrs", "dis", "add", "set", "tion", "ate", "key", "remove", "del", "hand", "load",
-            "upd", "rend", "age", "ent", "md5", "index"
+        self.black_password_list = [
+            "sso", "function", "this", "that", "define", "storage", "instruction", "__", "true", "false", "text",
+            "hidden", "null", "before", "code", "input", "async", "change", "pend", "hide", "after", "new", "object",
+            "string", "hover", "reset", "return", "void", "escape", "crypt", "8192", "digit", "alidate", "web", "call",
+            "webpack", "ield", "onfirm", "ucce", "navi", "alid", "deep", "olumn",  "eve", "ase", "etch", "ime",
+            "has", "attr", "rigin", "hart", "utton", "allow", "comm", "how", "anel", "ist", "lect", "ist",
+            "ame", "proxy", "oken", "onfig", "get", "able", "uto", "ini", "ttrs", "dis", "add", "set",
+            "tion", "ate", "key", "remove", "del", "hand", "load", "upd", "rend", "age", "ent", "md5", "index", "wind",
+            "rror", "track", "form", "ize", "croll", "eight", "nvoke", "stop", "start", "english"
         ]
+        self.black_token_list = self.black_password_list
+        self.black_key_list = self.black_password_list
         self.regex_map = {
             # "mail": r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]+)",
             # "host": r"([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}[:[0-9]{0,5}]{0,1})",
