@@ -340,7 +340,7 @@ class BaseEngine(object):
                     scan_time = f'{rabbitmq.pre_name}_{start_time}_{end_time}'
 
                     now_time = get_time_str(fmt="%H:%M:%S")
-                    if start_time < now_time < end_time:
+                    if (start_time < now_time < end_time) or (start_time < now_time < '24:00:00' and '00:00:00' < end_time and start_time > end_time) or (start_time < '24:00:00' and '00:00:00' < now_time < end_time and start_time > end_time):
                         total_scan_time.append(scan_time)
                         set_scan_time.append(scan_time)
 
