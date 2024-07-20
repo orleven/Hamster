@@ -55,10 +55,12 @@ def safe_urldecode(value, encoding='utf-8'):
         return None
 
 
-def urlencode(value, encoding='utf-8'):
+def urlencode(value, encoding='utf-8', all=False):
     """url编码"""
-
-    return quote(value, encoding)
+    if all:
+        return ''.join('%{:02X}'.format(ord(c)) for c in value)
+    else:
+        return quote(value, encoding)
 
 def safe_urlencode(value, encoding='utf-8'):
     """url编码, 不报错版"""

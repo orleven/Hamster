@@ -464,12 +464,17 @@ class BaseAddon(object):
         flow.response.content = data
         return flow
 
+    
     @staticmethod
     def set_request_headers(flow: HTTPFlow, headers: dict):
         """获取request headers"""
 
         for key, value in headers.items():
-            flow.request.headers[key] = value
+            if isinstance(value, dict):
+                _value = '; '.join([f"{_key}={_key}" for _key, _value in value.items()])
+                flow.request.headers[key] = _value
+            else:
+                flow.request.headers[key] = value
         for key, value in flow.request.headers.items():
             if key not in headers.keys() and (key != 'Content-Length' or key != 'content-length'):
                 flow.request.headers.pop(key)

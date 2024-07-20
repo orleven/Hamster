@@ -29,7 +29,7 @@ class RabbitMQ(object):
         self.url = f"amqp://{username}:{password}@{host}:{port}/"
 
     async def connect(self):
-        if not self.channel or self.channel.is_closed:
+        if self.connection is None or self.channel is None or self.exchange is None or self.channel.is_closed:
             self.queue_dic = {}
             retry_count = self.retry_count
             while retry_count:
@@ -45,16 +45,15 @@ class RabbitMQ(object):
                     return True
                 except Exception:
                     retry_count -= retry_count - 1
-                    await asyncio.sleep(5 - self.retry_count)
+                    await asyncio.sleep((5 - retry_count) * 5)
                     return False
 
         return True
 
     async def close(self):
         try:
-            if self.channel and not self.channel.is_closed:
-                await self.connection.close()
-                await self.channel.close()
+            await self.channel.close()
+            await self.connection.close()
         except:
             pass
         finally:

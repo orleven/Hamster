@@ -47,8 +47,6 @@ pyparsing==3.0.8
 pyperclip==1.8.2
 python-socks==2.0.3
 PyYAML==6.0
-ruamel.yaml==0.17.21
-ruamel.yaml.clib==0.2.6
 sortedcontainers==2.4.0
 SQLAlchemy==1.4.35
 tornado==6.1

@@ -77,6 +77,7 @@ class Addon(AgentAddon):
             "gateway/globalfilters": "cloud.gateway.filter",
             "gateway/routefilters": "gatewayfilter",
             "nacos-discovery": "NacosDiscoveryProperties",
+            "prometheus": "# HELP",
         }
 
     async def prove(self, flow: HTTPFlow):

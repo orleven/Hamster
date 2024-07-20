@@ -43,6 +43,7 @@ def import_addon_file(addons_path=None):
                     addon_path = addon.info().get("addon_path", None)
                     log.debug(f"Import addon file, addon: {addon_path}")
                 except Exception as e:
+                    traceback.print_exc()
                     log.error(f'Error import addon file, addon: {addons_path}, error: {str(e)}')
                 else:
                     addon_list.append(addon)

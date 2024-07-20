@@ -416,3 +416,15 @@ class WSRequestContextManager(_WSRequestContextManager):
 
 # 修复 aithttp 默认解码的问题
 URL._PATH_REQUOTER = _Quoter(safe="@:", protected=UNRESERVED + "/+")
+
+
+@classmethod
+def _normalize_path(cls, path):
+    segments = path.split("/")
+    resolved_path = []
+    for seg in segments:
+        resolved_path.append(seg)
+    return "/".join(resolved_path)
+
+# 修复 aithttp默认剔除 .. . 的bug
+URL._normalize_path = _normalize_path

@@ -102,9 +102,12 @@ class SimpleMaster(BaseMaster):
         """扫描函数"""
 
         try:
-            log.info(f"Start scan, hash: {flow_hash}, addon: {addon.name}")
-            res = await addon.prove(flow)
-            log.info(f"Final scan, hash: {flow_hash}, addon: {addon.name}")
+            if addon.is_scan_response(flow):
+                log.info(f"Start scan, hash: {flow_hash}, addon: {addon.name}")
+                res = await addon.prove(flow)
+                log.info(f"Final scan, hash: {flow_hash}, addon: {addon.name}")
+            else:
+                log.info(f"Skip scan, hash: {flow_hash}, addon: {addon.name}")
         except (ConnectionResetError, ConnectionAbortedError, TimeoutError, asyncio.TimeoutError):
             pass
         except (asyncio.CancelledError, ConnectionRefusedError, OSError):
