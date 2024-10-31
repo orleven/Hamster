@@ -101,12 +101,16 @@ async def get_addons_file_info(addon_path, id=""):
 async def get_dnslog_recode(domain=None):
 
     dnslog_api_func = conf.platform.dnslog_api_func
-    if dnslog_api_func == 'celestion':
+    if dnslog_api_func == 'eyes':
+        return await get_dnslog_recode_by_eyes(domain)
+    elif dnslog_api_func == 'interactsh':
+        return await get_dnslog_recode_by_interactsh(domain)
+    elif dnslog_api_func == 'celestion':
         return await get_dnslog_recode_by_celestion(domain)
     else:
-        return await get_dnslog_recode_by_default(domain)
+        return await get_dnslog_recode_by_interactsh(domain)
 
-async def get_dnslog_recode_by_default(domain=None):
+async def get_dnslog_recode_by_interactsh(domain=None):
     dnslog_list = []
     if domain is None:
         recode_list = await interactsh_client.poll()
@@ -160,6 +164,54 @@ async def get_dnslog_recode_by_celestion(domain=None):
                                 dnslog = await query_dnslog_by_keyword(recode_domain)
                                 if dnslog is None:
                                     dnslog = dict(keyword=recode_domain, ip=recode_ip, create_time=recode_time, update_time=get_time())
+                                    if await inject_dnslog(dnslog):
+                                        dnslog_list.append(dnslog)
+                        return dnslog_list
+                    else:
+                        msg = "response is error."
+    except Exception as e:
+        msg = str(e)
+        if "release" in msg:
+            msg = 'timeout'
+    log.error(f"Error api request, url: {url}, error: {msg}")
+    return dnslog_list
+
+
+async def get_dnslog_recode_by_eyes(domain=None):
+    """
+    请求dnslog recode,eyes.sh
+    """
+
+    url = conf.platform.dnslog_api_url
+    dnslog_top_domain = conf.platform.dnslog_top_domain
+    api_key = conf.platform.dnslog_api_key
+    user_agent = conf.basic.user_agent
+    dnslog_list = []
+    headers = {'API-Key': api_key, 'Content-Type': "application/json", 'User-Agent': user_agent}
+
+    msg = "response is null."
+    try:
+        async with ClientSession(None) as session:
+            async with session.get(url,  headers=headers, allow_redirects=False) as res:
+                if res and res.status == 200:
+                    content = await res.text()
+                    if content:
+                        recode_list = json.loads(content).get("data", [])
+                        now_time = get_time()
+                        if domain:
+                            for recode in recode_list:
+                                recode_domain = f'{recode}.{dnslog_top_domain}'
+                                now_time = get_time()
+                                if recode_domain == domain:
+                                    dnslog = dict(keyword=recode_domain, ip=None, create_time=now_time, update_time=now_time)
+                                    if await inject_dnslog(dnslog):
+                                        dnslog_list.append(dnslog)
+                        else:
+                            for recode in recode_list:
+                                recode_domain = f'{recode}.{dnslog_top_domain}'
+                                dnslog = await query_dnslog_by_keyword(recode_domain)
+                                if dnslog is None:
+                                    dnslog = dict(keyword=recode_domain, ip=None, create_time=now_time, update_time=now_time)
                                     if await inject_dnslog(dnslog):
                                         dnslog_list.append(dnslog)
                         return dnslog_list
